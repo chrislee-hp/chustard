@@ -10,7 +10,8 @@
     "dev:customer": "npm run dev -w client/customer",
     "dev:admin": "npm run dev -w client/admin",
     "test": "npm run test --workspaces --if-present",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:integration": "./run-integration-tests.sh"
   },
   "devDependencies": {
     "@playwright/test": "^1.41.0"
