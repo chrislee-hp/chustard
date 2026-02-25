@@ -77,7 +77,9 @@ export class OrderService {
   getAdminDashboard(storeId) {
     const tables = this.tableRepo.findByStoreId(storeId);
     return tables.map(table => {
-      const orders = this.orderRepo.findByTableId(table.id);
+      const orders = table.currentSessionId
+        ? this.orderRepo.findBySessionId(table.currentSessionId)
+        : [];
       const ordersWithItems = orders.map(order => ({
         ...order,
         items: this.orderItemRepo.findByOrderId(order.id).map(item => ({

@@ -12,7 +12,8 @@ export default defineConfig({
   server: {
     port: 3001,
     proxy: {
-      '/api': 'http://localhost:3000'
+      '/api': 'http://localhost:3000',
+      '/images': 'http://localhost:3000'
     }
   }
 })

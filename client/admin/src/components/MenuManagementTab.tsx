@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { fetchMenusAndCategories, deleteMenu, createMenu, updateMenu } from '../store/slices/menuManagementSlice';
+import { fetchMenusAndCategories, deleteMenu, createMenu, updateMenu, toggleSoldOut } from '../store/slices/menuManagementSlice';
 import type { RootState, AppDispatch } from '../store/store';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -71,6 +71,7 @@ function MenuListView() {
                   <TableHead className="font-bold">메뉴명 (한)</TableHead>
                   <TableHead className="font-bold">메뉴명 (영)</TableHead>
                   <TableHead className="text-right font-bold">가격</TableHead>
+                  <TableHead className="text-center font-bold">상태</TableHead>
                   <TableHead className="text-center font-bold w-32">작업</TableHead>
                 </TableRow>
               </TableHeader>
@@ -80,6 +81,15 @@ function MenuListView() {
                     <TableCell className="font-medium">{menu.nameKo}</TableCell>
                     <TableCell className="text-gray-600">{menu.nameEn}</TableCell>
                     <TableCell className="text-right font-semibold text-slate-700">₩{menu.price.toLocaleString()}</TableCell>
+                    <TableCell className="text-center">
+                      <Button
+                        onClick={() => dispatch(toggleSoldOut({ id: menu.id, soldOut: !menu.soldOut }))}
+                        variant={menu.soldOut ? "destructive" : "outline"}
+                        size="sm"
+                      >
+                        {menu.soldOut ? '품절' : '판매중'}
+                      </Button>
+                    </TableCell>
                     <TableCell className="text-center">
                       <div className="flex gap-2 justify-center">
                         <Button 

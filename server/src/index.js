@@ -16,6 +16,7 @@ import { MenuService } from './services/menuService.js';
 import { OrderService } from './services/orderService.js';
 import { TableService } from './services/tableService.js';
 import { SSEService } from './services/sseService.js';
+import { ImageGenerationService } from './services/imageGenerationService.js';
 
 import { createAuthRoutes } from './routes/authRoutes.js';
 import { createMenuRoutes } from './routes/menuRoutes.js';
@@ -60,7 +61,13 @@ async function main() {
   // Services
   const sseService = new SSEService();
   const authService = new AuthService(adminRepo, tableRepo, sessionRepo, loginAttemptRepo, JWT_SECRET);
-  const menuService = new MenuService(categoryRepo, menuRepo);
+  let imageService = null;
+  try {
+    imageService = new ImageGenerationService(process.env.AWS_REGION || 'us-east-1');
+  } catch (e) {
+    console.warn('Image generation unavailable:', e.message);
+  }
+  const menuService = new MenuService(categoryRepo, menuRepo, imageService);
   const orderService = new OrderService(orderRepo, orderItemRepo, menuRepo, tableRepo, sseService);
   const tableService = new TableService(tableRepo, sessionRepo, sseService);
 
