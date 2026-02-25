@@ -19,7 +19,7 @@ export function TableCard({ table, isNew, onClick }: TableCardProps) {
     <Card 
       className={`
         cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1
-        ${isNew ? 'ring-2 ring-orange-500 ring-offset-2 animate-pulse' : ''}
+        ${isNew ? 'ring-2 ring-orange-400 ring-offset-2' : ''}
         ${table.isActive ? 'gradient-card' : 'bg-gray-50'}
       `}
       onClick={onClick}
@@ -40,7 +40,7 @@ export function TableCard({ table, isNew, onClick }: TableCardProps) {
             </div>
           </div>
           {isNew && (
-            <Badge className="bg-orange-500 text-white animate-bounce">
+            <Badge variant="outline" className="border-orange-400 text-orange-600 bg-orange-50">
               <Bell className="w-3 h-3 mr-1" />
               NEW
             </Badge>

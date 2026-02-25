@@ -8,7 +8,7 @@ import { Badge } from './ui/badge'
 import { ShoppingCart, X, UtensilsCrossed, History, ChefHat } from 'lucide-react'
 
 export function Header() {
-  const { t } = useI18n()
+  useI18n()
   return (
     <header className="glass-effect sticky top-0 z-40 flex justify-between items-center px-6 py-3 border-b border-orange-200/50">
       <Link to="/menu" className="font-bold text-2xl no-underline text-orange-600 flex items-center gap-2 hover:text-orange-700 transition-colors">
@@ -90,7 +90,7 @@ export function CartPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
   )
 }
 
-export function CartToggleButton({ onClick, itemCount }: { onClick: () => void; itemCount: number }) {
+export function CartToggleButton({ onClick, totalQuantity }: { onClick: () => void; totalQuantity: number }) {
   return (
     <Button
       onClick={onClick}
@@ -98,9 +98,9 @@ export function CartToggleButton({ onClick, itemCount }: { onClick: () => void; 
       className="fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-2xl gradient-food hover:opacity-90 transition-all hover:scale-110"
     >
       <ShoppingCart className="w-7 h-7" />
-      {itemCount > 0 && (
+      {totalQuantity > 0 && (
         <Badge className="absolute -top-2 -right-2 w-8 h-8 flex items-center justify-center p-0 text-sm font-bold bg-red-500 border-2 border-white animate-bounce">
-          {itemCount}
+          {totalQuantity}
         </Badge>
       )}
     </Button>
@@ -112,6 +112,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const { items } = useCart()
   const { tableId, token, setExpired } = useAuth()
   const navigate = useNavigate()
+  
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0)
 
   useSSE(tableId && token ? `/api/sse/orders?tableId=${tableId}&token=${token}` : null, {
     onTableCompleted: () => {
@@ -124,7 +126,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen">
       <Header />
       <main className="pb-24">{children}</main>
-      <CartToggleButton onClick={() => setCartOpen(true)} itemCount={items.length} />
+      <CartToggleButton onClick={() => setCartOpen(true)} totalQuantity={totalQuantity} />
       <CartPanel isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </div>
   )
