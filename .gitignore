@@ -324,3 +324,4 @@ logs/
 # Playwright
 playwright-report/
 test-results/
+client/customer/.vite/

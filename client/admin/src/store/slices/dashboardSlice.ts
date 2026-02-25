@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import api from '../../utils/api';
 import type { Table, Order } from '../../types';
+import { updateOrderStatus, deleteOrder, completeSession } from './ordersSlice';
 
 interface DashboardState {
   tables: Table[];
@@ -87,7 +88,39 @@ const dashboardSlice = createSlice({
         state.tables = action.payload;
         state.loading = false;
       })
-      .addCase(fetchTables.rejected, (state) => { state.loading = false; });
+      .addCase(fetchTables.rejected, (state) => { state.loading = false; })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        const { orderId, status } = action.payload;
+        for (const table of state.tables) {
+          const order = table.orders.find(o => String(o.id) === String(orderId));
+          if (order) {
+            order.status = status;
+            break;
+          }
+        }
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        const orderId = action.payload;
+        for (const table of state.tables) {
+          const order = table.orders.find(o => String(o.id) === String(orderId));
+          if (order) {
+            table.totalAmount -= order.totalAmount;
+            table.orderCount--;
+            table.orders = table.orders.filter(o => String(o.id) !== String(orderId));
+            break;
+          }
+        }
+      })
+      .addCase(completeSession.fulfilled, (state, action) => {
+        const table = state.tables.find(t => t.id === action.payload);
+        if (table) {
+          table.isActive = false;
+          table.currentSessionId = null;
+          table.orders = [];
+          table.orderCount = 0;
+          table.totalAmount = 0;
+        }
+      });
   }
 });
 

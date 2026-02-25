@@ -30,15 +30,16 @@ export class MenuRepository {
     return stmt.get(categoryId)?.count || 0;
   }
 
-  update(id, { nameKo, nameEn, descKo, descEn, price, imageUrl, categoryId }) {
+  update(id, { nameKo, nameEn, descKo, descEn, price, imageUrl, categoryId, soldOut }) {
     const menu = this.findById(id);
     const stmt = createStatement(this.db, `
-      UPDATE menus SET name_ko = ?, name_en = ?, desc_ko = ?, desc_en = ?, price = ?, image_url = ?, category_id = ?
+      UPDATE menus SET name_ko = ?, name_en = ?, desc_ko = ?, desc_en = ?, price = ?, image_url = ?, category_id = ?, sold_out = ?
       WHERE id = ?
     `);
     stmt.run(
       nameKo ?? menu.nameKo, nameEn ?? menu.nameEn, descKo ?? menu.descKo, descEn ?? menu.descEn,
-      price ?? menu.price, imageUrl ?? menu.imageUrl, categoryId ?? menu.categoryId, id
+      price ?? menu.price, imageUrl ?? menu.imageUrl, categoryId ?? menu.categoryId,
+      soldOut !== undefined ? (soldOut ? 1 : 0) : (menu.soldOut ? 1 : 0), id
     );
     return this.findById(id);
   }
@@ -65,6 +66,7 @@ export class MenuRepository {
       descEn: row.desc_en,
       price: row.price,
       imageUrl: row.image_url,
+      soldOut: !!row.sold_out,
       sortOrder: row.sort_order,
       createdAt: row.created_at
     };

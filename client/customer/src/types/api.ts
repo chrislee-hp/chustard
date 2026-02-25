@@ -7,6 +7,7 @@ export interface Menu {
   price: number
   imageUrl: string
   categoryId: string
+  soldOut: boolean
 }
 
 export interface Category {

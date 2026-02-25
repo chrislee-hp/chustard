@@ -48,6 +48,14 @@ export const deleteMenu = createAsyncThunk(
   }
 );
 
+export const toggleSoldOut = createAsyncThunk(
+  'menuManagement/toggleSoldOut',
+  async ({ id, soldOut }: { id: string; soldOut: boolean }) => {
+    const { data } = await api.put(`/api/admin/menus/${id}`, { soldOut });
+    return data.menu as Menu;
+  }
+);
+
 const menuManagementSlice = createSlice({
   name: 'menuManagement',
   initialState,
@@ -70,6 +78,10 @@ const menuManagementSlice = createSlice({
       })
       .addCase(deleteMenu.fulfilled, (state, action) => {
         state.menus = state.menus.filter(m => m.id !== action.payload);
+      })
+      .addCase(toggleSoldOut.fulfilled, (state, action) => {
+        const idx = state.menus.findIndex(m => m.id === action.payload.id);
+        if (idx !== -1) state.menus[idx] = action.payload;
       });
   }
 });

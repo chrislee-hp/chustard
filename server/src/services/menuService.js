@@ -1,9 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export class MenuService {
-  constructor(categoryRepo, menuRepo) {
+  constructor(categoryRepo, menuRepo, imageService) {
     this.categoryRepo = categoryRepo;
     this.menuRepo = menuRepo;
+    this.imageService = imageService;
   }
 
   getMenus(storeId) {
@@ -14,6 +15,16 @@ export class MenuService {
       nameEn: cat.name,
     }));
     const menus = categories.flatMap(cat => this.menuRepo.findByCategoryId(cat.id));
+
+    // 이미지 없는 메뉴에 대해 백그라운드로 AI 이미지 생성
+    if (this.imageService) {
+      menus.filter(m => !m.imageUrl).forEach(m => {
+        this.imageService.generateMenuImage(m.id, m.nameEn, m.descEn)
+          .then(url => this.menuRepo.update(m.id, { imageUrl: url }))
+          .catch(err => console.error(`Image generation failed for ${m.id}:`, err.message));
+      });
+    }
+
     return { categories, menus };
   }
 
