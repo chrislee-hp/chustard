@@ -4,6 +4,9 @@ import { Outlet, useNavigate, NavLink } from 'react-router-dom';
 import { validateSession } from '../utils/session';
 import { loginSuccess, logout } from '../store/slices/authSlice';
 import type { RootState } from '../store/store';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { ClipboardList, ChefHat, LogOut, Store } from 'lucide-react';
 
 export function AdminLayout() {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -13,7 +16,6 @@ export function AdminLayout() {
   useEffect(() => {
     if (!isAuthenticated) {
       if (validateSession()) {
-        // sessionStorage에 유효한 토큰이 있으면 Redux 상태 복원
         const token = sessionStorage.getItem('admin_token')!;
         const user = { id: 'restored', storeId: '', username: '', role: 'admin' as const, createdAt: '' };
         dispatch(loginSuccess({ user, token }));
@@ -26,9 +28,9 @@ export function AdminLayout() {
   if (!isAuthenticated && !validateSession()) return null;
   
   return (
-    <div className="admin-layout">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-50">
       <Header />
-      <main><Outlet /></main>
+      <main className="p-6"><Outlet /></main>
     </div>
   );
 }
@@ -45,16 +47,67 @@ function Header() {
   };
   
   return (
-    <header style={{ padding: '1rem', borderBottom: '1px solid #ccc', display: 'flex', justifyContent: 'space-between' }}>
-      <nav style={{ display: 'flex', gap: '1rem' }}>
-        <NavLink to="/admin/orders" style={({ isActive }) => ({ textDecoration: 'none', color: isActive ? '#007bff' : '#333', fontWeight: isActive ? 'bold' : 'normal' })}>
-          주문 모니터링
-        </NavLink>
-        <NavLink to="/admin/menus" style={({ isActive }) => ({ textDecoration: 'none', color: isActive ? '#007bff' : '#333', fontWeight: isActive ? 'bold' : 'normal' })}>
-          메뉴 관리
-        </NavLink>
-      </nav>
-      <button onClick={handleLogout}>로그아웃</button>
+    <header className="glass-effect sticky top-0 z-40 border-b border-slate-200/50 shadow-lg">
+      <div className="flex justify-between items-center px-8 py-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl gradient-admin flex items-center justify-center shadow-lg">
+            <Store className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">매장 관리</h1>
+            <p className="text-sm text-slate-500">Restaurant Management System</p>
+          </div>
+        </div>
+        
+        <nav className="flex items-center gap-3">
+          <NavLink to="/admin/orders">
+            {({ isActive }) => (
+              <Button 
+                size="lg"
+                className={`
+                  rounded-xl font-semibold px-6 shadow-md transition-all
+                  ${isActive 
+                    ? 'gradient-admin text-white' 
+                    : 'bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-400 hover:bg-slate-50'
+                  }
+                `}
+              >
+                <ClipboardList className="w-5 h-5 mr-2" />
+                주문 모니터링
+                {isActive && <Badge className="ml-2 bg-white/20">LIVE</Badge>}
+              </Button>
+            )}
+          </NavLink>
+          
+          <NavLink to="/admin/menus">
+            {({ isActive }) => (
+              <Button 
+                size="lg"
+                className={`
+                  rounded-xl font-semibold px-6 shadow-md transition-all
+                  ${isActive 
+                    ? 'gradient-admin text-white' 
+                    : 'bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-400 hover:bg-slate-50'
+                  }
+                `}
+              >
+                <ChefHat className="w-5 h-5 mr-2" />
+                메뉴 관리
+              </Button>
+            )}
+          </NavLink>
+          
+          <Button 
+            onClick={handleLogout}
+            variant="outline"
+            size="lg"
+            className="rounded-xl border-2 border-red-200 text-red-600 hover:bg-red-50 hover:border-red-400 font-semibold px-6 shadow-md"
+          >
+            <LogOut className="w-5 h-5 mr-2" />
+            로그아웃
+          </Button>
+        </nav>
+      </div>
     </header>
   );
 }

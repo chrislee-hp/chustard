@@ -8,7 +8,7 @@ function TestComponent() {
     <div>
       <span data-testid="auth">{isAuthenticated ? 'yes' : 'no'}</span>
       <span data-testid="token">{token || 'none'}</span>
-      <button onClick={() => login('test-token', 'table-1', 'session-1')}>login</button>
+      <button onClick={() => login('test-token', 'table-1', 'session-1', 'store-1')}>login</button>
       <button onClick={logout}>logout</button>
     </div>
   )

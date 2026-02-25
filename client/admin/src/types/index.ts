@@ -61,15 +61,18 @@ export interface Menu {
   id: string;
   nameKo: string;
   nameEn: string;
-  descriptionKo: string;
-  descriptionEn: string;
+  descKo?: string;
+  descEn?: string;
+  descriptionKo?: string;
+  descriptionEn?: string;
   price: number;
   categoryId: string;
   imageUrl: string | null;
-  displayOrder: number;
-  isAvailable: boolean;
-  createdAt: string;
-  updatedAt: string;
+  displayOrder?: number;
+  sortOrder?: number;
+  isAvailable?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Category {
@@ -84,11 +87,11 @@ export interface Category {
 export interface MenuFormData {
   nameKo: string;
   nameEn: string;
-  descriptionKo: string;
-  descriptionEn: string;
+  descKo?: string;
+  descEn?: string;
   price: number;
   categoryId: string;
-  imageUrl: string;
+  imageUrl?: string;
 }
 
 // Validation Types
