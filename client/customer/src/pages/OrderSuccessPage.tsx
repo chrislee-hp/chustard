@@ -35,25 +35,24 @@ export function OrderSuccessPage() {
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-gray-800">{t('orderSuccess')}</h2>
             {orderId && (
-              <p className="text-gray-500">주문번호 #{String(orderId).slice(-6)}</p>
+              <p className="text-gray-500">{t('orderNumber')} #{String(orderId).slice(-6)}</p>
             )}
           </div>
           
-          <p className="text-gray-600">
-            주문이 접수되었습니다.<br/>
-            잠시만 기다려주세요!
+          <p className="text-gray-600" style={{ whiteSpace: 'pre-line' }}>
+            {t('orderReceived')}
           </p>
           
           <div className="pt-4 space-y-3">
             <div className="text-sm text-gray-400">
-              {countdown}초 후 메뉴 화면으로 이동합니다
+              {countdown} {t('redirecting')}
             </div>
             <Button 
               onClick={() => navigate('/menu')}
               className="w-full gradient-food hover:opacity-90"
               size="lg"
             >
-              메뉴로 돌아가기
+              {t('backToMenu')}
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </div>

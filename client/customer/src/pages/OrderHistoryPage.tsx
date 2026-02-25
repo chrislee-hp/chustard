@@ -45,7 +45,7 @@ export function OrderHistoryPage() {
       {orders.length === 0 ? (
         <Card className="glass-effect border-0 p-12 text-center">
           <Receipt className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-          <p className="text-gray-500">주문 내역이 없습니다</p>
+          <p className="text-gray-500">{t('noOrders')}</p>
         </Card>
       ) : (
         <div className="space-y-3">
@@ -65,9 +65,9 @@ export function OrderHistoryPage() {
                     ${order.status === 'completed' ? 'bg-green-500' : ''}
                     text-white
                   `}>
-                    {order.status === 'pending' && <><Clock className="w-3 h-3 mr-1" />대기중</>}
-                    {order.status === 'preparing' && <><ChefHat className="w-3 h-3 mr-1" />준비중</>}
-                    {order.status === 'completed' && <><Check className="w-3 h-3 mr-1" />완료</>}
+                    {order.status === 'pending' && <><Clock className="w-3 h-3 mr-1" />{t('status.pending')}</>}
+                    {order.status === 'preparing' && <><ChefHat className="w-3 h-3 mr-1" />{t('status.preparing')}</>}
+                    {order.status === 'completed' && <><Check className="w-3 h-3 mr-1" />{t('status.completed')}</>}
                   </Badge>
                 </div>
                 
@@ -81,7 +81,7 @@ export function OrderHistoryPage() {
                 </div>
                 
                 <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
-                  <span className="text-gray-600">총 금액</span>
+                  <span className="text-gray-600">{t('totalAmount')}</span>
                   <span className="font-bold text-xl text-orange-600">₩{order.totalAmount.toLocaleString()}</span>
                 </div>
               </CardContent>

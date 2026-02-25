@@ -418,7 +418,7 @@ test.describe('Journey 3: English User Journey', () => {
     await customerLoginEN(page);
     await page.click('text=주문내역');
     await expect(page.locator('text=Bulgogi').first()).toBeVisible({ timeout: 10000 });
-    await expect(page.locator('text=대기중').first()).toBeVisible();
+    await expect(page.locator('text=Pending').first()).toBeVisible();
   });
 
   test('EN-4: Toggle back to Korean', async ({ page }) => {

@@ -8,7 +8,7 @@ import { Badge } from './ui/badge'
 import { ShoppingCart, X, UtensilsCrossed, History, ChefHat } from 'lucide-react'
 
 export function Header() {
-  useI18n()
+  const { t } = useI18n()
   return (
     <header className="glass-effect sticky top-0 z-40 flex justify-between items-center px-6 py-3 border-b border-orange-200/50">
       <Link to="/menu" className="font-bold text-2xl no-underline text-orange-600 flex items-center gap-2 hover:text-orange-700 transition-colors">
