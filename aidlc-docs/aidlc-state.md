@@ -3,7 +3,7 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-02-25T11:49:47+09:00
-- **Current Stage**: INCEPTION - Units Generation
+- **Current Stage**: OPERATIONS (placeholder)
 
 ## Workspace State
 - **Existing Code**: No

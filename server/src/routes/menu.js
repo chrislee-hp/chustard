@@ -1,0 +1,12 @@
+const express = require('express');
+const router = express.Router();
+router.get('/menus', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.post('/admin/menus', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.put('/admin/menus/:id', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.delete('/admin/menus/:id', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.put('/admin/menus/reorder', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.post('/admin/categories', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.put('/admin/categories/:id', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.delete('/admin/categories/:id', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+router.put('/admin/categories/reorder', (req, res) => res.status(501).json({ error: 'Not implemented' }));
+module.exports = router;

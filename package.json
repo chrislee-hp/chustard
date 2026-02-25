@@ -1,0 +1,24 @@
+{
+  "name": "chustard",
+  "version": "1.0.0",
+  "description": "AIDLC (AI-Driven Development Life Cycle) 워크샵을 위한 사전 구성 프로젝트입니다.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrislee-hp/chustard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/chrislee-hp/chustard/issues"
+  },
+  "homepage": "https://github.com/chrislee-hp/chustard#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}

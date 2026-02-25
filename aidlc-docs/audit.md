@@ -160,3 +160,63 @@ AI-DLC 워크플로우를 시작해봅시다."
 **Context**: CONSTRUCTION - Unit 1 API Contract 생성 완료
 
 ---
+## Unit 1 Functional Design - Complete
+**Timestamp**: 2026-02-25T13:25:27+09:00
+**User Input**: "나머지 진행"
+**AI Response**: Unit 1 Functional Design 나머지 산출물 생성 완료: domain-entities.md (8 entities), business-rules.md (16 rules), business-logic-model.md (Auth/Order/Table/Menu flows).
+**Context**: CONSTRUCTION - Unit 1 Functional Design 완료
+
+---
+## Unit 1 Code Generation - TDD Selected
+**Timestamp**: 2026-02-25T13:27:51+09:00
+**User Input**: "A"
+**AI Response**: TDD 방식 선택. Part 1 TDD Planning 진행.
+**Context**: CONSTRUCTION - Unit 1 Code Generation (TDD) 시작
+
+---
+## Unit 1 TDD Planning - Approved
+**Timestamp**: 2026-02-25T13:31:56+09:00
+**User Input**: "y"
+**AI Response**: TDD Plan 승인. Part 2 TDD Generation 시작.
+**Context**: CONSTRUCTION - Unit 1 TDD Generation 진행
+
+---
+## Unit 1 TDD Code Generation - Complete
+**Timestamp**: 2026-02-25T13:49:13+09:00
+**AI Response**: Unit 1 API Server TDD 코드 생성 완료. 71개 테스트 전체 통과. Repository 6개, Service 5개, Route 5개, Middleware 1개, SSE 1개 구현. Seed data + Entry point 생성.
+**Context**: CONSTRUCTION - Unit 1 Code Generation 완료
+
+---
+## Unit 2 Customer SPA - TDD Start
+**Timestamp**: 2026-02-25T13:51:39+09:00
+**User Input**: "a"
+**AI Response**: TDD 선택. Functional Design + TDD Plan 생성. Part 2 Generation 진행.
+**Context**: CONSTRUCTION - Unit 2 Code Generation (TDD) 시작
+
+---
+## Unit 2 Customer SPA - TDD Complete
+**Timestamp**: 2026-02-25T14:12:00+09:00
+**AI Response**: Customer SPA TDD 완료. 14개 테스트 전체 통과. 6 pages, 4 hooks, i18n (ko/en), App routing + auth guard 구현.
+**Context**: CONSTRUCTION - Unit 2 Code Generation 완료
+
+---
+## Unit 3 Admin SPA - TDD Complete
+**Timestamp**: 2026-02-25T14:22:00+09:00
+**User Input**: "next"
+**AI Response**: Admin SPA TDD 완료. 7개 테스트 전체 통과. 4 pages (Login, Dashboard, TableManage, MenuManage, OrderHistory), NavBar, Auth guard 구현.
+**Context**: CONSTRUCTION - Unit 3 Code Generation 완료
+
+---
+## Build and Test Stage
+**Timestamp**: 2026-02-25T14:36:00+09:00
+**User Input**: "next"
+**AI Response**: Build and Test 문서 생성 완료. 4개 파일 생성 (build-instructions, unit-test-instructions, integration-test-instructions, build-and-test-summary).
+**Build Status**: Success
+**Test Status**: 92/92 All Passed
+**Files Generated**:
+- build-instructions.md
+- unit-test-instructions.md
+- integration-test-instructions.md
+- build-and-test-summary.md
+
+---
