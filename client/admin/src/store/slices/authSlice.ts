@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TOKEN_EXPIRY_MS } from '../../constants';
 import type { AuthState, AdminUser, LoginCredentials } from '../../types';
 
 const initialState: AuthState = {
@@ -17,7 +18,7 @@ const authSlice = createSlice({
       state.user = user;
       state.token = token;
       state.isAuthenticated = true;
-      state.tokenExpiry = Date.now() + 16 * 60 * 60 * 1000; // 16 hours
+      state.tokenExpiry = Date.now() + TOKEN_EXPIRY_MS;
       
       // Store in localStorage
       localStorage.setItem('admin_token', token);

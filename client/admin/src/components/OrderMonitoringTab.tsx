@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchTables, selectTable, openSidePanel } from '../store/slices/dashboardSlice';
+import { TABLE_POLLING_INTERVAL_MS } from '../constants';
 import { TableCard } from './TableCard';
 import { OrderDetailSidePanel } from './OrderDetailSidePanel';
 import type { RootState, AppDispatch } from '../store/store';
@@ -15,7 +16,7 @@ export function OrderMonitoringTab() {
     // Poll every 5 minutes
     const interval = setInterval(() => {
       dispatch(fetchTables());
-    }, 5 * 60 * 1000);
+    }, TABLE_POLLING_INTERVAL_MS);
     
     return () => clearInterval(interval);
   }, [dispatch]);

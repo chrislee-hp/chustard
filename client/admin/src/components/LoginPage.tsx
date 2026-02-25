@@ -41,8 +41,9 @@ export function LoginPage() {
       
       dispatch(loginSuccess({ user: mockUser, token: mockToken }));
       navigate('/admin/orders');
-    } catch (error: any) {
-      alert(error.message || '로그인 실패');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '로그인 실패';
+      alert(message);
     } finally {
       setIsLoading(false);
     }
