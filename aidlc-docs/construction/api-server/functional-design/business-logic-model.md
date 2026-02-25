@@ -52,7 +52,11 @@
 ```
 1. 입력 검증 (nameKo, nameEn, price, categoryId)
 2. 가격 범위 검증 (1000~100000)
-3. imageUrl 검증 (있으면 HEAD 요청)
+3. imageUrl 검증 (있으면 HEAD 요청, 5초 타임아웃)
+   - 형식 오류 → INVALID_IMAGE_URL_FORMAT
+   - 404 → IMAGE_NOT_FOUND
+   - 타임아웃 → IMAGE_VALIDATION_TIMEOUT
+   - 네트워크 오류 → IMAGE_VALIDATION_FAILED
 4. Category 존재 확인
 5. Menu 저장 (UUID 생성, sortOrder = MAX+1)
 6. 반환: menu
@@ -76,10 +80,12 @@
 2. 각 item의 Menu 존재 확인
 3. 수량 검증 (1~99)
 4. totalAmount 계산: SUM(item.price * item.quantity)
-5. Order 저장 (status=pending)
-6. OrderItem 저장 (메뉴명 스냅샷 포함)
-7. SSE 발행: order:created
-8. 반환: order
+5. 트랜잭션 시작:
+   - Order 저장 (status=pending)
+   - OrderItem 저장 (메뉴명 스냅샷 포함)
+   - 트랜잭션 커밋 (실패 시 롤백)
+6. SSE 발행: order:created
+7. 반환: order
 ```
 
 ### updateOrderStatus(orderId, newStatus)
@@ -135,8 +141,9 @@
 
 ### subscribe(clientId, role, storeId?, tableId?)
 ```
-1. 연결 정보 저장: { clientId, role, storeId, tableId, response }
-2. Keep-alive 설정 (30초 간격 ping)
+1. Keep-alive 인터벌 생성 (30초 간격 ping)
+2. 연결 정보 저장: { clientId, role, storeId, tableId, response, keepAlive }
+3. 연결 종료 이벤트에 unsubscribe 등록
 ```
 
 ### broadcast(eventType, data, scope)
@@ -149,5 +156,6 @@
 
 ### unsubscribe(clientId)
 ```
-1. 연결 정보 제거
+1. keepAlive 인터벌 정리 (clearInterval)
+2. 연결 정보 제거
 ```

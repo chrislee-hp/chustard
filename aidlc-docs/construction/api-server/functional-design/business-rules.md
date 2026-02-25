@@ -11,6 +11,7 @@
 - Admin 토큰 만료: 16시간
 - Table 토큰 만료: 24시간
 - 자동 갱신: 만료 1시간 전 요청 시 새 토큰 발급
+- JWT_SECRET: 프로덕션 환경에서 필수 (환경변수)
 
 ### 테이블 비밀번호
 - 형식: 4자리 숫자 PIN (0000~9999)
@@ -50,8 +51,12 @@ pending → preparing → completed (순방향만 허용)
 
 ### 이미지 URL 검증
 - 형식 검증: `http://` 또는 `https://`로 시작
-- 존재 검증: HTTP HEAD 요청으로 이미지 존재 확인
-- 실패 시: 400 VALIDATION_ERROR 반환
+- 존재 검증: HTTP HEAD 요청으로 이미지 존재 확인 (5초 타임아웃)
+- 에러 코드:
+  - `INVALID_IMAGE_URL_FORMAT`: URL 형식 오류
+  - `IMAGE_NOT_FOUND`: 이미지 없음 (404)
+  - `IMAGE_VALIDATION_TIMEOUT`: 검증 타임아웃 (408)
+  - `IMAGE_VALIDATION_FAILED`: 네트워크 오류 등
 
 ### 수량 범위
 - 최소: 1
@@ -98,6 +103,10 @@ pending → preparing → completed (순방향만 허용)
 - 재연결 시 최신 상태만 전송
 - 누락 이벤트 버퍼링 없음
 - 클라이언트는 재연결 후 전체 데이터 재조회 권장
+
+### Keep-Alive
+- 30초 간격 ping 전송
+- 연결 종료 시 자동 정리 (메모리 누수 방지)
 
 ---
 
