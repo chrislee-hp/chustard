@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, NavLink } from 'react-router-dom';
 import { validateSession, createMockUser } from '../utils/session';
 import { loginSuccess } from '../store/slices/authSlice';
 import type { RootState } from '../store/store';
@@ -58,8 +58,26 @@ function Header() {
   return (
     <header style={{ padding: '1rem', borderBottom: '1px solid #ccc', display: 'flex', justifyContent: 'space-between' }}>
       <nav style={{ display: 'flex', gap: '1rem' }}>
-        <a href="/admin/orders" style={{ textDecoration: 'none', color: '#333' }}>주문 모니터링</a>
-        <a href="/admin/menus" style={{ textDecoration: 'none', color: '#333' }}>메뉴 관리</a>
+        <NavLink 
+          to="/admin/orders" 
+          style={({ isActive }) => ({ 
+            textDecoration: 'none', 
+            color: isActive ? '#007bff' : '#333',
+            fontWeight: isActive ? 'bold' : 'normal'
+          })}
+        >
+          주문 모니터링
+        </NavLink>
+        <NavLink 
+          to="/admin/menus" 
+          style={({ isActive }) => ({ 
+            textDecoration: 'none', 
+            color: isActive ? '#007bff' : '#333',
+            fontWeight: isActive ? 'bold' : 'normal'
+          })}
+        >
+          메뉴 관리
+        </NavLink>
       </nav>
       <button onClick={handleLogout}>로그아웃</button>
     </header>
