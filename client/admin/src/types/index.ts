@@ -71,6 +71,7 @@ export interface Menu {
   displayOrder?: number;
   sortOrder?: number;
   isAvailable?: boolean;
+  soldOut: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
