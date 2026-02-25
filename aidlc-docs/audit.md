@@ -160,3 +160,51 @@ AI-DLC 워크플로우를 시작해봅시다."
 **Context**: CONSTRUCTION - Unit 1 API Contract 생성 완료
 
 ---
+
+## Construction Phase - Unit 1 Functional Design Start
+**Timestamp**: 2026-02-25T13:25:15+09:00
+**User Input**: "unit 1만 진행해보자"
+**AI Response**: Unit 1 (API Server) Functional Design 시작. 12개 명확화 질문 생성 (주문 번호 형식, 상태 전환 규칙, 세션 ID, 동시 주문, 이미지 검증, 카테고리 삭제, 주문 삭제 방식, JWT 갱신, SSE 재연결, 테이블 비밀번호, 가격 범위, 과거 내역 보관). unit-1-functional-design-plan.md 생성.
+**Context**: CONSTRUCTION - Unit 1 Functional Design, 질문 생성 및 사용자 응답 대기
+
+---
+
+## Construction Phase - Unit 1 Functional Design Answers Received
+**Timestamp**: 2026-02-25T13:43:20+09:00
+**User Input**: "답변 적었어"
+**AI Response**: 12개 질문 응답 확인 완료. Q1:A(순차 번호), Q2:A(순방향만), Q3:A(UUID), Q4:A(동시 주문 허용), Q5:B(이미지 존재 검증), Q6:A(메뉴 있으면 삭제 차단), Q7:B(Soft Delete), Q8:A(자동 갱신), Q9:A(최신 상태만), Q10:A(4자리 PIN), Q11:A(범위 설정), Q12:A(영구 보관). Functional Design 실행 진행.
+**Context**: CONSTRUCTION - Unit 1 Functional Design, 질문 응답 처리 및 설계 실행
+
+---
+
+## Construction Phase - Unit 1 Functional Design Approved
+**Timestamp**: 2026-02-25T13:46:50+09:00
+**User Input**: "B"
+**AI Response**: Functional Design 승인. Code Generation 단계로 진행.
+**Context**: CONSTRUCTION - Unit 1 Functional Design 승인, Code Generation 시작
+
+---
+
+## Construction Phase - Unit 1 Code Generation TDD Selection
+**Timestamp**: 2026-02-25T13:47:15+09:00
+**User Input**: "A"
+**AI Response**: TDD 방식 선택. Code Generation Plan 생성 진행.
+**Context**: CONSTRUCTION - Unit 1 Code Generation, TDD 선택
+
+---
+
+## Construction Phase - Unit 1 TDD Code Generation Plan Approved
+**Timestamp**: 2026-02-25T13:47:50+09:00
+**User Input**: "A"
+**AI Response**: TDD Code Generation Plan 승인. Phase 1부터 코드 생성 시작.
+**Context**: CONSTRUCTION - Unit 1 Code Generation, Plan 승인 및 실행 시작
+
+---
+
+## Construction Phase - Unit 1 Code Generation Approved
+**Timestamp**: 2026-02-25T13:54:16+09:00
+**User Input**: "B"
+**AI Response**: Unit 1 Code Generation 승인. Unit 2 (Customer SPA) Functional Design 시작.
+**Context**: CONSTRUCTION - Unit 1 완료, Unit 2 시작
+
+---
