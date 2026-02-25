@@ -206,7 +206,9 @@ AI-DLC 워크플로우를 시작해봅시다."
 **User Input**: "B"
 **AI Response**: Unit 1 Code Generation 승인. Unit 2 (Customer SPA) Functional Design 시작.
 **Context**: CONSTRUCTION - Unit 1 완료, Unit 2 시작
-=======
+
+---
+
 ## Construction Phase - Unit 2 Functional Design Start
 **Timestamp**: 2026-02-25T13:26:57+09:00
 **User Input**: "y"
@@ -271,5 +273,5 @@ AI-DLC 워크플로우를 시작해봅시다."
 **User Input**: "C"
 **AI Response**: Customer SPA 테스트 실행 및 검증 진행.
 **Context**: CONSTRUCTION - Unit 2 테스트 검증
->>>>>>> 012b8b1 (docs: Customer SPA 설계 문서 및 상태 업데이트)
 
+---

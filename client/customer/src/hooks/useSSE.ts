@@ -9,6 +9,12 @@ interface SSEHandlers {
 export function useSSE(url: string | null, handlers: SSEHandlers) {
   const eventSourceRef = useRef<EventSource | null>(null)
   const reconnectTimeoutRef = useRef<number | null>(null)
+  const handlersRef = useRef(handlers)
+
+  // handlers를 ref로 관리하여 재연결 방지
+  useEffect(() => {
+    handlersRef.current = handlers
+  }, [handlers])
 
   const connect = useCallback(() => {
     if (!url) return
@@ -17,19 +23,19 @@ export function useSSE(url: string | null, handlers: SSEHandlers) {
     eventSourceRef.current = es
 
     es.addEventListener('order:status-changed', (e) => {
-      handlers.onOrderStatusChanged?.(JSON.parse(e.data))
+      handlersRef.current.onOrderStatusChanged?.(JSON.parse(e.data))
     })
 
     es.addEventListener('table:completed', () => {
-      handlers.onTableCompleted?.()
+      handlersRef.current.onTableCompleted?.()
     })
 
     es.onerror = (e) => {
-      handlers.onError?.(e)
+      handlersRef.current.onError?.(e)
       es.close()
       reconnectTimeoutRef.current = window.setTimeout(connect, 3000)
     }
-  }, [url, handlers])
+  }, [url])
 
   useEffect(() => {
     connect()

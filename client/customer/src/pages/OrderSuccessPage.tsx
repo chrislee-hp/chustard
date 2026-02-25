@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useI18n } from '../contexts'
 
@@ -8,14 +8,17 @@ export function OrderSuccessPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const orderId = location.state?.orderId
+  const timerRef = useRef<number | null>(null)
 
   useEffect(() => {
     if (countdown <= 0) {
       navigate('/menu')
       return
     }
-    const timer = setTimeout(() => setCountdown(c => c - 1), 1000)
-    return () => clearTimeout(timer)
+    timerRef.current = window.setTimeout(() => setCountdown(c => c - 1), 1000)
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
   }, [countdown, navigate])
 
   return (
