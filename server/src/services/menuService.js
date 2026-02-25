@@ -7,13 +7,14 @@ export class MenuService {
   }
 
   getMenus(storeId) {
-    const categories = this.categoryRepo.findByStoreId(storeId);
-    return {
-      categories: categories.map(cat => ({
-        ...cat,
-        menus: this.menuRepo.findByCategoryId(cat.id)
-      }))
-    };
+    if (!storeId) throw new Error('VALIDATION_ERROR');
+    const categories = this.categoryRepo.findByStoreId(storeId).map(cat => ({
+      ...cat,
+      nameKo: cat.name,
+      nameEn: cat.name,
+    }));
+    const menus = categories.flatMap(cat => this.menuRepo.findByCategoryId(cat.id));
+    return { categories, menus };
   }
 
   async createMenu({ nameKo, nameEn, descKo, descEn, price, categoryId, imageUrl }) {

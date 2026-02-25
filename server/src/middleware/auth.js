@@ -3,13 +3,15 @@ import jwt from 'jsonwebtoken';
 export function authMiddleware(jwtSecret) {
   return (req, res, next) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
+    const queryToken = req.query.token;
+    const tokenStr = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : queryToken;
+
+    if (!tokenStr) {
       return res.status(401).json({ error: { code: 'UNAUTHORIZED', message: 'Missing token' } });
     }
 
     try {
-      const token = authHeader.slice(7);
-      const decoded = jwt.verify(token, jwtSecret);
+      const decoded = jwt.verify(tokenStr, jwtSecret);
       req.user = decoded;
       next();
     } catch {

@@ -72,10 +72,10 @@ export function CartToggleButton({ onClick, itemCount }: { onClick: () => void; 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const [cartOpen, setCartOpen] = useState(false)
   const { items } = useCart()
-  const { tableId, setExpired } = useAuth()
+  const { tableId, token, setExpired } = useAuth()
   const navigate = useNavigate()
 
-  useSSE(tableId ? `/api/sse/orders?tableId=${tableId}` : null, {
+  useSSE(tableId && token ? `/api/sse/orders?tableId=${tableId}&token=${token}` : null, {
     onTableCompleted: () => {
       setExpired()
       navigate('/session-expired')

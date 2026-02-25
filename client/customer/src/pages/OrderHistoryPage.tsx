@@ -6,7 +6,7 @@ import type { Order } from '../types/api'
 export function OrderHistoryPage() {
   const [orders, setOrders] = useState<Order[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const { tableId } = useAuth()
+  const { tableId, token } = useAuth()
   const { t, locale } = useI18n()
   const { get } = useApi()
 
@@ -22,7 +22,7 @@ export function OrderHistoryPage() {
     fetchOrders()
   }, [get])
 
-  useSSE(tableId ? `/api/sse/orders?tableId=${tableId}` : null, {
+  useSSE(tableId && token ? `/api/sse/orders?tableId=${tableId}&token=${token}` : null, {
     onOrderStatusChanged: (data) => {
       setOrders(prev => prev.map(o => o.id === data.orderId ? { ...o, status: data.status as Order['status'] } : o))
     },
@@ -44,7 +44,7 @@ export function OrderHistoryPage() {
           {orders.map(order => (
             <div key={order.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontWeight: 600 }}>#{order.id.slice(-6)}</span>
+                <span style={{ fontWeight: 600 }}>#{String(order.id).slice(-6)}</span>
                 <span style={{ padding: '2px 8px', borderRadius: 12, background: order.status === 'completed' ? '#4caf50' : '#ff9800', color: '#fff', fontSize: 12 }}>
                   {getStatusLabel(order.status)}
                 </span>

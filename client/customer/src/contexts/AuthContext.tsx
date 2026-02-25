@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback, ReactNode } from 'rea
 import type { AuthState } from '../types'
 
 interface AuthContextType extends AuthState {
-  login: (token: string, tableId: string, sessionId: string) => void
+  login: (token: string, tableId: string, sessionId: string, storeId: string) => void
   logout: () => void
   setExpired: () => void
 }
@@ -14,16 +14,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     token: null,
     tableId: null,
     sessionId: null,
+    storeId: null,
     isAuthenticated: false,
   })
 
-  const login = useCallback((token: string, tableId: string, sessionId: string) => {
-    setState({ token, tableId, sessionId, isAuthenticated: true })
+  const login = useCallback((token: string, tableId: string, sessionId: string, storeId: string) => {
+    setState({ token, tableId, sessionId, storeId, isAuthenticated: true })
   }, [])
 
   const logout = useCallback(() => {
     localStorage.removeItem('table_auth')
-    setState({ token: null, tableId: null, sessionId: null, isAuthenticated: false })
+    setState({ token: null, tableId: null, sessionId: null, storeId: null, isAuthenticated: false })
   }, [])
 
   const setExpired = useCallback(() => {

@@ -24,9 +24,8 @@ export class SSEService {
 
   broadcast(eventType, data, scope) {
     this.connections.forEach((client) => {
-      const match = scope.storeId
-        ? client.storeId === scope.storeId
-        : client.tableId === scope.tableId;
+      const match = (scope.tableId && client.tableId === scope.tableId) ||
+                    (scope.storeId && client.storeId === scope.storeId);
 
       if (match) {
         client.res.write(`event: ${eventType}\ndata: ${JSON.stringify(data)}\n\n`);

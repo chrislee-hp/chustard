@@ -6,21 +6,26 @@ export function createOrderRoutes(orderService, authMiddleware) {
 
   router.post('/orders', authMiddleware, requireTable, (req, res, next) => {
     try {
-      const { tableId, sessionId, items } = req.body;
+      const { tableId, sessionId } = req.user;
+      const { items } = req.body;
       const order = orderService.createOrder(tableId, sessionId, items);
-      res.status(201).json({ order });
+      res.status(201).json({ order, orderId: order.id });
     } catch (err) { next(err); }
   });
 
   router.get('/orders', authMiddleware, requireTable, (req, res) => {
-    const { tableId, sessionId } = req.query;
+    const { tableId, sessionId } = req.user;
     const orders = orderService.getOrdersBySession(tableId, sessionId);
     res.json({ orders });
   });
 
   router.get('/admin/orders', authMiddleware, requireAdmin, (req, res) => {
-    // TODO: Implement admin order dashboard
-    res.json({ tables: [] });
+    const tables = orderService.getAdminDashboard(req.user.storeId);
+    res.json({ tables });
+  });
+
+  router.get('/admin/orders/history', authMiddleware, requireAdmin, (req, res) => {
+    res.json({ history: [] });
   });
 
   router.put('/admin/orders/:id/status', authMiddleware, requireAdmin, (req, res, next) => {
@@ -35,11 +40,6 @@ export function createOrderRoutes(orderService, authMiddleware) {
       orderService.deleteOrder(parseInt(req.params.id));
       res.json({ success: true });
     } catch (err) { next(err); }
-  });
-
-  router.get('/admin/orders/history', authMiddleware, requireAdmin, (req, res) => {
-    // TODO: Implement order history
-    res.json({ history: [] });
   });
 
   return router;

@@ -18,12 +18,12 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       }
       try {
         const { storeId, tableNumber, password } = JSON.parse(saved)
-        const res = await post<{ token: string; tableId: string; sessionId: string }>('/api/table/login', {
+        const res = await post<{ token: string; tableId: string; sessionId: string; storeId: string }>('/api/table/login', {
           storeId,
           tableNumber: parseInt(tableNumber),
           password,
         })
-        login(res.token, res.tableId, res.sessionId)
+        login(res.token, res.tableId, res.sessionId, res.storeId)
       } catch {
         localStorage.removeItem('table_auth')
         logout()
