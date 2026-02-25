@@ -23,13 +23,13 @@ export function LoginSetupPage() {
 
     setIsLoading(true)
     try {
-      const res = await post<{ token: string; tableId: string; sessionId: string }>('/api/table/login', {
+      const res = await post<{ token: string; tableId: string; sessionId: string; storeId: string }>('/api/table/login', {
         storeId,
         tableNumber: parseInt(tableNumber),
         password,
       })
       localStorage.setItem('table_auth', JSON.stringify({ storeId, tableNumber, password }))
-      login(res.token, res.tableId, res.sessionId)
+      login(res.token, res.tableId, res.sessionId, res.storeId)
       navigate('/menu')
     } catch {
       showToast(t('error.loginFailed'), 'error')

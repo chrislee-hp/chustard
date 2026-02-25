@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { fetchMenus, fetchCategories, deleteMenu } from '../store/slices/menuManagementSlice';
+import { fetchMenusAndCategories, deleteMenu } from '../store/slices/menuManagementSlice';
 import type { RootState, AppDispatch } from '../store/store';
 
 export function MenuManagementTab() {
@@ -22,8 +22,7 @@ function MenuListView() {
   const { menus, categories } = useSelector((state: RootState) => state.menuManagement);
   
   useEffect(() => {
-    dispatch(fetchMenus());
-    dispatch(fetchCategories());
+    dispatch(fetchMenusAndCategories());
   }, [dispatch]);
   
   const handleDelete = (menuId: string) => {

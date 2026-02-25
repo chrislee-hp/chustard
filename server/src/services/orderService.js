@@ -25,8 +25,8 @@ export class OrderService {
       const menu = this.menuRepo.findById(item.menuId);
       if (!menu) throw new Error('NOT_FOUND');
       if (item.quantity < 1 || item.quantity > 99) throw new Error('VALIDATION_ERROR');
-      totalAmount += item.price * item.quantity;
-      return { ...item, nameKo: menu.nameKo, nameEn: menu.nameEn };
+      totalAmount += menu.price * item.quantity;
+      return { ...item, nameKo: menu.nameKo, nameEn: menu.nameEn, price: menu.price };
     });
 
     // 주문 생성
@@ -42,7 +42,7 @@ export class OrderService {
     });
 
     const orderWithItems = { ...order, items: this.orderItemRepo.findByOrderId(order.id) };
-    this.sseService.broadcast('order:created', { order: orderWithItems }, { tableId });
+    this.sseService.broadcast('order:created', { order: orderWithItems }, { tableId, storeId: table.storeId });
     return orderWithItems;
   }
 
@@ -60,7 +60,8 @@ export class OrderService {
     if (!VALID_TRANSITIONS[order.status]?.includes(newStatus)) throw new Error('VALIDATION_ERROR');
 
     const updated = this.orderRepo.updateStatus(orderId, newStatus);
-    this.sseService.broadcast('order:status-changed', { orderId, status: newStatus }, { tableId: order.tableId });
+    const table = this.tableRepo.findById(order.tableId);
+    this.sseService.broadcast('order:status-changed', { orderId, status: newStatus }, { tableId: order.tableId, storeId: table?.storeId });
     return updated;
   }
 
@@ -69,6 +70,35 @@ export class OrderService {
     if (!order) throw new Error('NOT_FOUND');
 
     this.orderRepo.softDelete(orderId);
-    this.sseService.broadcast('order:deleted', { orderId }, { tableId: order.tableId });
+    const table = this.tableRepo.findById(order.tableId);
+    this.sseService.broadcast('order:deleted', { orderId }, { tableId: order.tableId, storeId: table?.storeId });
+  }
+
+  getAdminDashboard(storeId) {
+    const tables = this.tableRepo.findByStoreId(storeId);
+    return tables.map(table => {
+      const orders = this.orderRepo.findByTableId(table.id);
+      const ordersWithItems = orders.map(order => ({
+        ...order,
+        items: this.orderItemRepo.findByOrderId(order.id).map(item => ({
+          menuId: item.menuId,
+          menuName: item.nameKo,
+          menuNameEn: item.nameEn,
+          quantity: item.quantity,
+          price: item.price,
+          subtotal: item.price * item.quantity,
+        })),
+      }));
+      return {
+        id: table.id,
+        tableNumber: String(table.tableNumber),
+        isActive: table.status === 'active',
+        currentSessionId: table.currentSessionId,
+        totalAmount: ordersWithItems.reduce((sum, o) => sum + o.totalAmount, 0),
+        orderCount: ordersWithItems.length,
+        lastOrderAt: ordersWithItems.length > 0 ? ordersWithItems[ordersWithItems.length - 1].createdAt : null,
+        orders: ordersWithItems,
+      };
+    });
   }
 }

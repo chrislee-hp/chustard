@@ -2,6 +2,7 @@ export interface AuthState {
   token: string | null
   tableId: string | null
   sessionId: string | null
+  storeId: string | null
   isAuthenticated: boolean
 }
 

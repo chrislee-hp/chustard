@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useCart, useToast } from '../contexts'
+import { useCart, useToast, useAuth } from '../contexts'
 import { useApi } from '../hooks'
 import { MenuCard, CategoryTabs } from '../components'
 import type { Menu, Category } from '../types/api'
@@ -13,11 +13,12 @@ export function MenuPage() {
   const { addItem } = useCart()
   const { showToast } = useToast()
   const { get } = useApi()
+  const { storeId } = useAuth()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await get<{ categories: Category[]; menus: Menu[] }>('/api/menus')
+        const data = await get<{ categories: Category[]; menus: Menu[] }>(`/api/menus?storeId=${storeId}`)
         setCategories(data.categories)
         setMenus(data.menus)
         if (data.categories.length > 0) {
@@ -30,7 +31,7 @@ export function MenuPage() {
       }
     }
     fetchData()
-  }, [get, showToast])
+  }, [get, showToast, storeId])
 
   const filteredMenus = selectedCategoryId ? menus.filter(m => m.categoryId === selectedCategoryId) : menus
 

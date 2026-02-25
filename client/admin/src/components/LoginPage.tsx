@@ -1,9 +1,9 @@
 import React, { useState, FormEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { loginSuccess } from '../store/slices/authSlice';
+import { loginSuccess, loginFailure } from '../store/slices/authSlice';
 import { validateLoginForm } from '../utils/validation';
-import { createMockUser } from '../utils/session';
+import api from '../utils/api';
 import type { LoginCredentials } from '../types';
 
 export function LoginPage() {
@@ -17,16 +17,11 @@ export function LoginPage() {
   const navigate = useNavigate();
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
-    // Validate
     const errors = validateLoginForm(formData);
     if (errors.length > 0) {
       alert(errors.map(e => e.message).join('\n'));
@@ -35,14 +30,16 @@ export function LoginPage() {
     
     setIsLoading(true);
     try {
-      // Mock API call - TODO: Replace with actual API
-      const mockUser = createMockUser(formData.storeId, formData.username);
-      const mockToken = 'mock-jwt-token-' + Date.now();
-      
-      dispatch(loginSuccess({ user: mockUser, token: mockToken }));
+      const { data } = await api.post('/api/admin/login', formData);
+      const user = { id: 'admin-001', storeId: formData.storeId, username: formData.username, role: 'admin' as const, createdAt: new Date().toISOString() };
+      dispatch(loginSuccess({ user, token: data.token }));
       navigate('/admin/orders');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : '로그인 실패';
+    } catch (error: unknown) {
+      const status = (error as { response?: { status?: number } })?.response?.status;
+      const message = status === 423
+        ? '로그인 시도 횟수를 초과했습니다. 잠시 후 다시 시도해주세요.'
+        : '로그인에 실패했습니다. 매장ID, 사용자명, 비밀번호를 확인해주세요.';
+      dispatch(loginFailure(message));
       alert(message);
     } finally {
       setIsLoading(false);
@@ -55,31 +52,15 @@ export function LoginPage() {
       <form onSubmit={handleSubmit}>
         <div>
           <label>매장 식별자</label>
-          <input
-            name="storeId"
-            value={formData.storeId}
-            onChange={handleChange}
-            placeholder="store-123"
-          />
+          <input name="storeId" value={formData.storeId} onChange={handleChange} placeholder="store-123" />
         </div>
         <div>
           <label>사용자명</label>
-          <input
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            placeholder="admin"
-          />
+          <input name="username" value={formData.username} onChange={handleChange} placeholder="admin" />
         </div>
         <div>
           <label>비밀번호</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="********"
-          />
+          <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" />
         </div>
         <button type="submit" disabled={isLoading}>
           {isLoading ? '로그인 중...' : '로그인'}

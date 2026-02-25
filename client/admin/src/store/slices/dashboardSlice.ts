@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import api from '../../utils/api';
 import type { Table, Order } from '../../types';
 
 interface DashboardState {
@@ -6,7 +7,7 @@ interface DashboardState {
   selectedTableId: string | null;
   sidePanelOpen: boolean;
   filterTableId: string | null;
-  newOrderIds: string[]; // Changed from Set to Array for Redux serialization
+  newOrderIds: string[];
   loading: boolean;
 }
 
@@ -22,30 +23,8 @@ const initialState: DashboardState = {
 export const fetchTables = createAsyncThunk(
   'dashboard/fetchTables',
   async () => {
-    // Mock API call
-    const mockTables: Table[] = [
-      {
-        id: '1',
-        tableNumber: '1',
-        isActive: true,
-        currentSessionId: 'session-1',
-        totalAmount: 45000,
-        orderCount: 2,
-        lastOrderAt: new Date().toISOString(),
-        orders: []
-      },
-      {
-        id: '2',
-        tableNumber: '2',
-        isActive: false,
-        currentSessionId: null,
-        totalAmount: 0,
-        orderCount: 0,
-        lastOrderAt: null,
-        orders: []
-      }
-    ];
-    return mockTables;
+    const { data } = await api.get('/api/admin/orders');
+    return data.tables as Table[];
   }
 );
 
@@ -80,51 +59,42 @@ const dashboardSlice = createSlice({
         table.lastOrderAt = action.payload.createdAt;
       }
     },
-    orderUpdated: (state, action: PayloadAction<Order>) => {
-      const table = state.tables.find(t => t.id === action.payload.tableId);
-      if (table) {
-        const index = table.orders.findIndex(o => o.id === action.payload.id);
-        if (index !== -1) {
-          table.orders[index] = action.payload;
+    orderUpdated: (state, action: PayloadAction<{ id: number | string; status: string }>) => {
+      for (const table of state.tables) {
+        const order = table.orders.find(o => String(o.id) === String(action.payload.id));
+        if (order) {
+          order.status = action.payload.status as Order['status'];
+          break;
         }
       }
     },
     orderDeleted: (state, action: PayloadAction<{ orderId: string; tableId: string }>) => {
-      const table = state.tables.find(t => t.id === action.payload.tableId);
-      if (table) {
-        const order = table.orders.find(o => o.id === action.payload.orderId);
+      for (const table of state.tables) {
+        const order = table.orders.find(o => String(o.id) === String(action.payload.orderId));
         if (order) {
           table.totalAmount -= order.totalAmount;
           table.orderCount--;
-          table.orders = table.orders.filter(o => o.id !== action.payload.orderId);
+          table.orders = table.orders.filter(o => String(o.id) !== String(action.payload.orderId));
+          break;
         }
       }
     }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTables.pending, (state) => {
-        state.loading = true;
-      })
+      .addCase(fetchTables.pending, (state) => { state.loading = true; })
       .addCase(fetchTables.fulfilled, (state, action) => {
         state.tables = action.payload;
         state.loading = false;
       })
-      .addCase(fetchTables.rejected, (state) => {
-        state.loading = false;
-      });
+      .addCase(fetchTables.rejected, (state) => { state.loading = false; });
   }
 });
 
 export const {
-  selectTable,
-  openSidePanel,
-  closeSidePanel,
-  markOrderAsNew,
-  clearNewOrderFlag,
-  orderReceived,
-  orderUpdated,
-  orderDeleted
+  selectTable, openSidePanel, closeSidePanel,
+  markOrderAsNew, clearNewOrderFlag,
+  orderReceived, orderUpdated, orderDeleted
 } = dashboardSlice.actions;
 
 export default dashboardSlice.reducer;

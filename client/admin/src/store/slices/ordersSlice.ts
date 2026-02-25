@@ -1,4 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import api from '../../utils/api';
 import type { Order, OrderStatus } from '../../types';
 
 interface OrdersState {
@@ -14,8 +15,7 @@ const initialState: OrdersState = {
 export const updateOrderStatus = createAsyncThunk(
   'orders/updateStatus',
   async ({ orderId, status }: { orderId: string; status: OrderStatus }) => {
-    // Mock API call
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await api.put(`/api/admin/orders/${orderId}/status`, { status });
     return { orderId, status };
   }
 );
@@ -23,8 +23,7 @@ export const updateOrderStatus = createAsyncThunk(
 export const deleteOrder = createAsyncThunk(
   'orders/delete',
   async (orderId: string) => {
-    // Mock API call
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await api.delete(`/api/admin/orders/${orderId}`);
     return orderId;
   }
 );
@@ -32,8 +31,7 @@ export const deleteOrder = createAsyncThunk(
 export const completeSession = createAsyncThunk(
   'orders/completeSession',
   async (tableId: string) => {
-    // Mock API call
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await api.post(`/api/admin/tables/${tableId}/complete`);
     return tableId;
   }
 );
@@ -49,9 +47,7 @@ const ordersSlice = createSlice({
       })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         const { orderId, status } = action.payload;
-        if (state.orders[orderId]) {
-          state.orders[orderId].status = status;
-        }
+        if (state.orders[orderId]) state.orders[orderId].status = status;
         state.loading[orderId] = false;
       })
       .addCase(deleteOrder.pending, (state, action) => {

@@ -46,7 +46,7 @@ export class AuthService {
     }
 
     const token = jwt.sign({ role: 'table', storeId, tableId: table.id, sessionId }, this.jwtSecret, { expiresIn: TABLE_TOKEN_EXPIRY });
-    return { token, tableId: table.id, sessionId };
+    return { token, tableId: table.id, sessionId, storeId };
   }
 
   verifyToken(token) {
