@@ -161,6 +161,15 @@ AI-DLC 워크플로우를 시작해봅시다."
 
 ---
 
+## Construction Phase - Unit 1 Functional Design Start
+**Timestamp**: 2026-02-25T13:25:15+09:00
+**User Input**: "unit 1만 진행해보자"
+**AI Response**: Unit 1 (API Server) Functional Design 시작. 12개 명확화 질문 생성 (주문 번호 형식, 상태 전환 규칙, 세션 ID, 동시 주문, 이미지 검증, 카테고리 삭제, 주문 삭제 방식, JWT 갱신, SSE 재연결, 테이블 비밀번호, 가격 범위, 과거 내역 보관). unit-1-functional-design-plan.md 생성.
+**Context**: CONSTRUCTION - Unit 1 Functional Design, 질문 생성 및 사용자 응답 대기
+
+---
+---
+
 
 ## CONSTRUCTION - Functional Design (admin-web) - Plan Creation
 **Timestamp**: 2026-02-25T13:26:18+09:00

@@ -22,9 +22,10 @@
 - [x] INCEPTION - Workflow Planning (2026-02-25T13:00:18+09:00)
 - [x] INCEPTION - Application Design (2026-02-25T13:03:15+09:00)
 - [x] INCEPTION - Units Generation (2026-02-25T13:09:27+09:00)
-- [x] CONSTRUCTION - Functional Design - EXECUTE (per-unit)
-- [x] CONSTRUCTION - NFR Requirements - SKIP (기술 스택 결정됨, 요구사항에서 충분히 정의)
-- [x] CONSTRUCTION - NFR Design - SKIP (NFR Requirements 스킵)
-- [x] CONSTRUCTION - Infrastructure Design - SKIP (로컬 개발 환경 MVP)
-- [x] CONSTRUCTION - Code Generation - EXECUTE (per-unit)
-- [x] CONSTRUCTION - Build and Test - EXECUTE
+- [x] CONSTRUCTION - Unit 1 Functional Design (2026-02-25T13:46:50+09:00)
+- [x] CONSTRUCTION - Unit 1 Code Generation (API Server) - COMPLETE (2026-02-25T13:47:50+09:00)
+- [x] CONSTRUCTION - Unit 2 Functional Design - COMPLETE
+- [x] CONSTRUCTION - Unit 2 Code Generation (Customer SPA) - COMPLETE
+- [x] CONSTRUCTION - Unit 3 Functional Design - COMPLETE
+- [x] CONSTRUCTION - Unit 3 Code Generation (Admin SPA) - COMPLETE
+- [x] CONSTRUCTION - Build and Test - COMPLETE
