@@ -2,10 +2,10 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
-  fullyParallel: false, // Integration tests need to run sequentially
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: 1, // Run integration tests one at a time
+  workers: 1,
   reporter: 'list',
   use: {
     trace: 'on-first-retry',
@@ -20,6 +20,14 @@ export default defineConfig({
       },
     },
     {
+      name: 'admin',
+      testDir: './client/admin/e2e',
+      use: { 
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:3002'
+      },
+    },
+    {
       name: 'integration',
       testDir: './e2e/integration',
       use: { 
@@ -27,6 +35,4 @@ export default defineConfig({
       },
     },
   ],
-  // Assume servers are already running for integration tests
-  // Start manually: npm run dev:server, npm run dev:customer, npm run dev:admin
 })
