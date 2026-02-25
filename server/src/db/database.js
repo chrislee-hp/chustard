@@ -16,6 +16,11 @@ export function getDb(dbPath = join(__dirname, 'app.db')) {
   return db;
 }
 
+export function transaction(db, callback) {
+  const txn = db.transaction(callback);
+  return txn();
+}
+
 export function initDb(dbPath) {
   const database = getDb(dbPath);
   const schema = readFileSync(join(__dirname, 'schema.sql'), 'utf-8');

@@ -4,11 +4,21 @@ export class SSEService {
   }
 
   subscribe(clientId, role, storeId, tableId, res) {
-    this.connections.set(clientId, { role, storeId, tableId, res });
+    const keepAlive = setInterval(() => {
+      try {
+        res.write(': ping\n\n');
+      } catch {
+        this.unsubscribe(clientId);
+      }
+    }, 30000);
+    
+    this.connections.set(clientId, { role, storeId, tableId, res, keepAlive });
     res.on('close', () => this.unsubscribe(clientId));
   }
 
   unsubscribe(clientId) {
+    const conn = this.connections.get(clientId);
+    if (conn?.keepAlive) clearInterval(conn.keepAlive);
     this.connections.delete(clientId);
   }
 

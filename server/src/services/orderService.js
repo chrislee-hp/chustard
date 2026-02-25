@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { transaction } from '../db/database.js';
 
 const VALID_TRANSITIONS = {
   pending: ['preparing'],
@@ -28,13 +29,17 @@ export class OrderService {
       return { ...item, nameKo: menu.nameKo, nameEn: menu.nameEn };
     });
 
-    const order = this.orderRepo.create({ sessionId, tableId, totalAmount });
-
-    validatedItems.forEach(item => {
-      this.orderItemRepo.create({
-        id: uuidv4(), orderId: order.id, menuId: item.menuId,
-        nameKo: item.nameKo, nameEn: item.nameEn, quantity: item.quantity, price: item.price
+    const order = transaction(this.orderRepo.db, () => {
+      const newOrder = this.orderRepo.create({ sessionId, tableId, totalAmount });
+      
+      validatedItems.forEach(item => {
+        this.orderItemRepo.create({
+          id: uuidv4(), orderId: newOrder.id, menuId: item.menuId,
+          nameKo: item.nameKo, nameEn: item.nameEn, quantity: item.quantity, price: item.price
+        });
       });
+      
+      return newOrder;
     });
 
     const orderWithItems = { ...order, items: this.orderItemRepo.findByOrderId(order.id) };

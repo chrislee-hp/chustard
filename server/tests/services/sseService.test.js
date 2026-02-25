@@ -12,6 +12,7 @@ describe('SSEService', () => {
       const mockRes = { write: jest.fn(), on: jest.fn() };
       service.subscribe('client-001', 'admin', 'store-001', null, mockRes);
       expect(service.connections.size).toBe(1);
+      expect(service.connections.get('client-001').keepAlive).toBeDefined();
     });
   });
 
@@ -36,11 +37,17 @@ describe('SSEService', () => {
   });
 
   describe('unsubscribe', () => {
-    it('should remove client from connections', () => {
+    it('should remove client and clear keepAlive', () => {
       const mockRes = { write: jest.fn(), on: jest.fn() };
       service.subscribe('client-001', 'admin', 'store-001', null, mockRes);
+      
+      const conn = service.connections.get('client-001');
+      const clearSpy = jest.spyOn(global, 'clearInterval');
+      
       service.unsubscribe('client-001');
+      
       expect(service.connections.size).toBe(0);
+      expect(clearSpy).toHaveBeenCalledWith(conn.keepAlive);
     });
   });
 });

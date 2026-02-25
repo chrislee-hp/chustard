@@ -60,13 +60,21 @@ export class MenuService {
 
   async #validateImageUrl(url) {
     if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      throw new Error('VALIDATION_ERROR');
+      throw new Error('INVALID_IMAGE_URL_FORMAT');
     }
+    
     try {
-      const res = await fetch(url, { method: 'HEAD' });
-      if (!res.ok) throw new Error('VALIDATION_ERROR');
-    } catch {
-      throw new Error('VALIDATION_ERROR');
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const res = await fetch(url, { method: 'HEAD', signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (!res.ok) throw new Error('IMAGE_NOT_FOUND');
+    } catch (err) {
+      if (err.name === 'AbortError') throw new Error('IMAGE_VALIDATION_TIMEOUT');
+      if (err.message === 'IMAGE_NOT_FOUND') throw err;
+      throw new Error('IMAGE_VALIDATION_FAILED');
     }
   }
 }

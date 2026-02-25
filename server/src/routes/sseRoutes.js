@@ -14,11 +14,7 @@ export function createSSERoutes(sseService, authMiddleware) {
     const { role, storeId, tableId } = req.user;
 
     sseService.subscribe(clientId, role, storeId, tableId, res);
-
     res.write(`event: connected\ndata: ${JSON.stringify({ clientId })}\n\n`);
-
-    const keepAlive = setInterval(() => res.write(': ping\n\n'), 30000);
-    res.on('close', () => clearInterval(keepAlive));
   });
 
   return router;

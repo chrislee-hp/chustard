@@ -23,7 +23,13 @@ import { createOrderRoutes } from './routes/orderRoutes.js';
 import { createTableRoutes } from './routes/tableRoutes.js';
 import { createSSERoutes } from './routes/sseRoutes.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 
+  (process.env.NODE_ENV !== 'production' ? 'dev-secret-key' : null);
+
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required in production');
+}
+
 const PORT = process.env.PORT || 3000;
 
 // Initialize DB

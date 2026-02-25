@@ -1,9 +1,7 @@
 -- Default Store
 INSERT OR IGNORE INTO stores (id, name) VALUES ('store-001', '테스트 매장');
 
--- Default Admin (password: admin1234)
-INSERT OR IGNORE INTO admins (id, store_id, username, password_hash) 
-VALUES ('admin-001', 'store-001', 'admin', '$2b$10$rQZ8K.XqK1Y5J5Z5Z5Z5ZuZ5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z5Z');
+-- Default Admin은 init.js에서 bcrypt로 생성
 
 -- Sample Categories
 INSERT OR IGNORE INTO categories (id, store_id, name, sort_order) VALUES 
