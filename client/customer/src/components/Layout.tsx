@@ -5,25 +5,26 @@ import { useSSE } from '../hooks'
 import { LanguageToggle, CartItem } from '../components'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
-import { ShoppingCart, X, UtensilsCrossed, History } from 'lucide-react'
+import { ShoppingCart, X, UtensilsCrossed, History, ChefHat } from 'lucide-react'
 
 export function Header() {
   const { t } = useI18n()
   return (
-    <header className="glass-effect sticky top-0 z-40 flex justify-between items-center px-6 py-4 border-b border-orange-200/50">
+    <header className="glass-effect sticky top-0 z-40 flex justify-between items-center px-6 py-3 border-b border-orange-200/50">
       <Link to="/menu" className="font-bold text-2xl no-underline text-orange-600 flex items-center gap-2 hover:text-orange-700 transition-colors">
         <UtensilsCrossed className="w-7 h-7" />
         맛있는 주문
       </Link>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <Link to="/menu">
-          <Button variant="ghost" size="sm" className="text-gray-700 hover:text-orange-600 hover:bg-orange-50 font-medium">
+          <Button size="lg" className="bg-white border-2 border-orange-200 text-gray-700 hover:border-orange-400 hover:bg-orange-50 font-semibold rounded-full px-6 shadow-sm">
+            <ChefHat className="w-5 h-5 mr-2" />
             메뉴
           </Button>
         </Link>
         <Link to="/orders">
-          <Button variant="ghost" size="sm" className="text-gray-700 hover:text-orange-600 hover:bg-orange-50 font-medium flex items-center gap-1">
-            <History className="w-4 h-4" />
+          <Button size="lg" className="bg-white border-2 border-orange-200 text-gray-700 hover:border-orange-400 hover:bg-orange-50 font-semibold rounded-full px-6 shadow-sm">
+            <History className="w-5 h-5 mr-2" />
             주문내역
           </Button>
         </Link>
