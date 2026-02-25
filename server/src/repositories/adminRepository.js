@@ -1,10 +1,12 @@
+import { createStatement, saveDb } from '../db/database.js';
+
 export class AdminRepository {
   constructor(db) {
     this.db = db;
   }
 
   create({ id, storeId, username, passwordHash }) {
-    const stmt = this.db.prepare(`
+    const stmt = createStatement(this.db, `
       INSERT INTO admins (id, store_id, username, password_hash)
       VALUES (?, ?, ?, ?)
     `);
@@ -13,13 +15,13 @@ export class AdminRepository {
   }
 
   findById(id) {
-    const stmt = this.db.prepare('SELECT * FROM admins WHERE id = ?');
+    const stmt = createStatement(this.db, 'SELECT * FROM admins WHERE id = ?');
     const row = stmt.get(id);
     return row ? this.#mapRow(row) : null;
   }
 
   findByStoreAndUsername(storeId, username) {
-    const stmt = this.db.prepare('SELECT * FROM admins WHERE store_id = ? AND username = ?');
+    const stmt = createStatement(this.db, 'SELECT * FROM admins WHERE store_id = ? AND username = ?');
     const row = stmt.get(storeId, username);
     return row ? this.#mapRow(row) : null;
   }

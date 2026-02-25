@@ -29,17 +29,16 @@ export class OrderService {
       return { ...item, nameKo: menu.nameKo, nameEn: menu.nameEn };
     });
 
-    const order = transaction(this.orderRepo.db, () => {
-      const newOrder = this.orderRepo.create({ sessionId, tableId, totalAmount });
-      
-      validatedItems.forEach(item => {
-        this.orderItemRepo.create({
-          id: uuidv4(), orderId: newOrder.id, menuId: item.menuId,
-          nameKo: item.nameKo, nameEn: item.nameEn, quantity: item.quantity, price: item.price
-        });
+    // 주문 생성
+    const order = this.orderRepo.create({ sessionId, tableId, totalAmount });
+    if (!order) throw new Error('ORDER_CREATE_FAILED');
+    
+    // 주문 항목 생성
+    validatedItems.forEach(item => {
+      this.orderItemRepo.create({
+        id: uuidv4(), orderId: order.id, menuId: item.menuId,
+        nameKo: item.nameKo, nameEn: item.nameEn, quantity: item.quantity, price: item.price
       });
-      
-      return newOrder;
     });
 
     const orderWithItems = { ...order, items: this.orderItemRepo.findByOrderId(order.id) };
