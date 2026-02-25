@@ -320,3 +320,7 @@ logs/
 *.swp
 .cache/
 .temp/
+
+# Playwright
+playwright-report/
+test-results/
