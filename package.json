@@ -1,0 +1,18 @@
+{
+  "name": "table-order",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client/*"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:customer": "npm run dev -w client/customer",
+    "dev:admin": "npm run dev -w client/admin",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.41.0"
+  }
+}

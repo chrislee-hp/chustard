@@ -208,3 +208,70 @@ AI-DLC 워크플로우를 시작해봅시다."
 **Context**: CONSTRUCTION - Unit 1 완료, Unit 2 시작
 
 ---
+
+## Construction Phase - Unit 2 Functional Design Start
+**Timestamp**: 2026-02-25T13:26:57+09:00
+**User Input**: "y"
+**Context**: CONSTRUCTION - Unit 2 Functional Design 시작
+
+---
+
+## Construction Phase - Unit 2 Functional Design Answers
+**Timestamp**: 2026-02-25T13:39:18+09:00
+**User Input**: "y" (질문 응답 완료 확인)
+**AI Response**: 8개 질문 응답 확인. Q1:B(반응형), Q2:C(토글), Q3:A(카운트다운), Q4:A(헤더 우측), Q5:A(헤더), Q6:A(안내만), Q7:C(인라인 스피너), Q8:A(토스트). 모순 없음. Functional Design 산출물 생성 진행.
+**Context**: CONSTRUCTION - Unit 2 Functional Design, 질문 응답 처리
+
+---
+
+## Construction Phase - Unit 2 Functional Design Additional Answers
+**Timestamp**: 2026-02-25T13:47:49+09:00
+**User Input**: "y" (Q10 추천 A 수락)
+**AI Response**: Q9~Q11 응답 확인. Q9:A(React Context), Q10:A(커스텀 Hook), Q11:B(axios). frontend-components.md에 Technical Decisions 섹션 추가 완료.
+**Context**: CONSTRUCTION - Unit 2 Functional Design, 추가 질문 응답 처리
+
+---
+
+## Session Resumption
+**Timestamp**: 2026-02-25T13:49:56+09:00
+**User Input**: "이어서 필요한 작업 진행해줘. 그리고 필요할 때 TDD해줘. Playwright 사용해서."
+**AI Response**: 세션 재개. Customer SPA Functional Design 완료 상태 확인. Code Generation 단계로 진행. TDD 방식 + Playwright E2E 테스트 요청 확인.
+**Context**: CONSTRUCTION - Code Generation 준비
+
+---
+
+## Code Generation - Monorepo Structure Clarification
+**Timestamp**: 2026-02-25T13:52:28+09:00
+**User Input**: "이 프로젝트 내에서 nodejs 서버, spa 프로젝트 2개가 돌아갈거야. 그 점을 주지하고 진행해줘."
+**AI Response**: Monorepo 구조 확인. Root package.json에 workspaces 설정, 각 프로젝트별 독립 package.json 구성. Playwright는 root 레벨에서 전체 E2E 테스트 관리.
+**Context**: CONSTRUCTION - Code Generation, Monorepo 구조 반영
+
+---
+
+## Code Generation - Plan Approved
+**Timestamp**: 2026-02-25T13:53:14+09:00
+**User Input**: "y"
+**AI Response**: TDD Code Generation Plan 승인됨. Phase 1부터 순차 진행 시작.
+**Context**: CONSTRUCTION - Code Generation 시작
+
+---
+
+## Code Generation - Unit 2 Customer SPA Complete
+**Timestamp**: 2026-02-25T13:53:14+09:00
+**AI Response**: Customer SPA TDD Code Generation 완료. 
+- Phase 1: Monorepo 설정 (root package.json, Vite, Vitest, Playwright)
+- Phase 2: Core Infrastructure (AuthContext, CartContext, I18nContext, ToastContext, useApi, useSSE)
+- Phase 3: Components (Toast, MenuCard, CartItem, CategoryTabs, Layout)
+- Phase 4: Integration (App routing, AuthGuard)
+- Phase 5: E2E Tests (login.spec.ts, cart-order.spec.ts)
+**Context**: CONSTRUCTION - Unit 2 Code Generation 완료
+
+---
+
+## Code Generation - Test Execution
+**Timestamp**: 2026-02-25T14:00:55+09:00
+**User Input**: "C"
+**AI Response**: Customer SPA 테스트 실행 및 검증 진행.
+**Context**: CONSTRUCTION - Unit 2 테스트 검증
+
+---

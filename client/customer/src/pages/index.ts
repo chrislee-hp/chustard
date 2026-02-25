@@ -1,0 +1,6 @@
+export { LoginSetupPage } from './LoginSetupPage'
+export { MenuPage } from './MenuPage'
+export { OrderConfirmPage } from './OrderConfirmPage'
+export { OrderSuccessPage } from './OrderSuccessPage'
+export { OrderHistoryPage } from './OrderHistoryPage'
+export { SessionExpiredPage } from './SessionExpiredPage'
