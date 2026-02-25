@@ -6,7 +6,7 @@ interface DashboardState {
   selectedTableId: string | null;
   sidePanelOpen: boolean;
   filterTableId: string | null;
-  newOrderIds: Set<string>;
+  newOrderIds: string[]; // Changed from Set to Array for Redux serialization
   loading: boolean;
 }
 
@@ -15,7 +15,7 @@ const initialState: DashboardState = {
   selectedTableId: null,
   sidePanelOpen: false,
   filterTableId: null,
-  newOrderIds: new Set(),
+  newOrderIds: [],
   loading: false
 };
 
@@ -64,10 +64,12 @@ const dashboardSlice = createSlice({
       state.selectedTableId = null;
     },
     markOrderAsNew: (state, action: PayloadAction<string>) => {
-      state.newOrderIds.add(action.payload);
+      if (!state.newOrderIds.includes(action.payload)) {
+        state.newOrderIds.push(action.payload);
+      }
     },
     clearNewOrderFlag: (state, action: PayloadAction<string>) => {
-      state.newOrderIds.delete(action.payload);
+      state.newOrderIds = state.newOrderIds.filter(id => id !== action.payload);
     },
     orderReceived: (state, action: PayloadAction<Order>) => {
       const table = state.tables.find(t => t.id === action.payload.tableId);

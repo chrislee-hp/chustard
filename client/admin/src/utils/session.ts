@@ -28,3 +28,17 @@ export function isTokenExpired(): boolean {
   if (!expiry) return true;
   return Date.now() > Number(expiry);
 }
+
+/**
+ * Creates a mock user for development/testing
+ * TODO: Remove when real API is implemented
+ */
+export function createMockUser(storeId: string, username: string) {
+  return {
+    id: '1',
+    storeId,
+    username,
+    role: 'admin' as const,
+    createdAt: new Date().toISOString()
+  };
+}

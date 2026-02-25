@@ -39,7 +39,7 @@ export function OrderMonitoringTab() {
           <TableCard
             key={table.id}
             table={table}
-            isNew={newOrderIds.has(table.id)}
+            isNew={newOrderIds.includes(table.id)}
             onClick={() => handleCardClick(table.id)}
           />
         ))}

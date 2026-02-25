@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { AuthState, AdminUser, LoginCredentials } from '../../types';
 
 const initialState: AuthState = {
@@ -7,20 +7,6 @@ const initialState: AuthState = {
   isAuthenticated: false,
   tokenExpiry: 0
 };
-
-export const loginRequest = createAsyncThunk(
-  'auth/login',
-  async (credentials: LoginCredentials): Promise<{ user: AdminUser; token: string }> => {
-    throw new Error('NotImplementedError: loginRequest');
-  }
-);
-
-export const restoreSession = createAsyncThunk(
-  'auth/restoreSession',
-  async (): Promise<{ user: AdminUser; token: string } | null> => {
-    throw new Error('NotImplementedError: restoreSession');
-  }
-);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -53,18 +39,6 @@ const authSlice = createSlice({
       localStorage.removeItem('admin_token');
       localStorage.removeItem('token_expiry');
     }
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginRequest.fulfilled, (state, action) => {
-        // Will be implemented
-      })
-      .addCase(loginRequest.rejected, (state, action) => {
-        // Will be implemented
-      })
-      .addCase(restoreSession.fulfilled, (state, action) => {
-        // Will be implemented
-      });
   }
 });
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { validateSession } from '../utils/session';
+import { validateSession, createMockUser } from '../utils/session';
 import { loginSuccess } from '../store/slices/authSlice';
 import type { RootState } from '../store/store';
 
@@ -15,14 +15,8 @@ export function AdminLayout() {
     if (!isAuthenticated && validateSession()) {
       const token = localStorage.getItem('admin_token');
       if (token) {
-        // Restore mock user
-        const mockUser = {
-          id: '1',
-          storeId: 'store-1',
-          username: 'admin',
-          role: 'admin' as const,
-          createdAt: new Date().toISOString()
-        };
+        // Restore mock user - TODO: Decode from JWT in production
+        const mockUser = createMockUser('store-1', 'admin');
         dispatch(loginSuccess({ user: mockUser, token }));
         return;
       }

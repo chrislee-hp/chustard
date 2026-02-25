@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../store/slices/authSlice';
 import { validateLoginForm } from '../utils/validation';
+import { createMockUser } from '../utils/session';
 import type { LoginCredentials } from '../types';
 
 export function LoginPage() {
@@ -34,14 +35,8 @@ export function LoginPage() {
     
     setIsLoading(true);
     try {
-      // Mock API call
-      const mockUser = {
-        id: '1',
-        storeId: formData.storeId,
-        username: formData.username,
-        role: 'admin' as const,
-        createdAt: new Date().toISOString()
-      };
+      // Mock API call - TODO: Replace with actual API
+      const mockUser = createMockUser(formData.storeId, formData.username);
       const mockToken = 'mock-jwt-token-' + Date.now();
       
       dispatch(loginSuccess({ user: mockUser, token: mockToken }));

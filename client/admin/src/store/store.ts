@@ -10,14 +10,7 @@ export const store = configureStore({
     dashboard: dashboardReducer,
     orders: ordersReducer,
     menuManagement: menuManagementReducer
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['dashboard/markOrderAsNew', 'dashboard/clearNewOrderFlag'],
-        ignoredPaths: ['dashboard.newOrderIds']
-      }
-    })
+  }
 });
 
 export type RootState = ReturnType<typeof store.getState>;
