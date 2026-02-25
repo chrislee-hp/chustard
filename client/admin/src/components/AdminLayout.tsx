@@ -11,9 +11,9 @@ export function AdminLayout() {
   const dispatch = useDispatch();
   
   useEffect(() => {
-    // Try to restore session from localStorage
+    // Try to restore session from sessionStorage
     if (!isAuthenticated && validateSession()) {
-      const token = localStorage.getItem('admin_token');
+      const token = sessionStorage.getItem('admin_token');
       if (token) {
         // Restore mock user - TODO: Decode from JWT in production
         const mockUser = createMockUser('store-1', 'admin');
@@ -49,8 +49,8 @@ function Header() {
   const handleLogout = () => {
     if (confirm('로그아웃하시겠습니까?')) {
       // dispatch(logout());
-      localStorage.removeItem('admin_token');
-      localStorage.removeItem('token_expiry');
+      sessionStorage.removeItem('admin_token');
+      sessionStorage.removeItem('token_expiry');
       navigate('/login');
     }
   };

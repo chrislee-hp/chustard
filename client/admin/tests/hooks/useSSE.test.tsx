@@ -5,7 +5,7 @@ import { useSSE } from '../../src/hooks/useSSE';
 
 describe('useSSE', () => {
   beforeEach(() => {
-    localStorage.clear();
+    sessionStorage.clear();
   });
 
   it('should not create EventSource without token', () => {
@@ -20,7 +20,7 @@ describe('useSSE', () => {
   });
 
   it('should create EventSource with valid token', () => {
-    localStorage.setItem('admin_token', 'valid-token');
+    sessionStorage.setItem('admin_token', 'valid-token');
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <Provider store={store}>{children}</Provider>

@@ -20,9 +20,10 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.tokenExpiry = Date.now() + TOKEN_EXPIRY_MS;
       
-      // Store in localStorage
-      localStorage.setItem('admin_token', token);
-      localStorage.setItem('token_expiry', String(state.tokenExpiry));
+      // Store in sessionStorage (more secure than localStorage)
+      // TODO: Use httpOnly cookies when real API is implemented
+      sessionStorage.setItem('admin_token', token);
+      sessionStorage.setItem('token_expiry', String(state.tokenExpiry));
     },
     loginFailure: (state, action: PayloadAction<string>) => {
       state.user = null;
@@ -36,9 +37,9 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.tokenExpiry = 0;
       
-      // Clear localStorage
-      localStorage.removeItem('admin_token');
-      localStorage.removeItem('token_expiry');
+      // Clear sessionStorage
+      sessionStorage.removeItem('admin_token');
+      sessionStorage.removeItem('token_expiry');
     }
   }
 });

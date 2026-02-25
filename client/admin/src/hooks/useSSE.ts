@@ -11,7 +11,7 @@ export function useSSE() {
   const dispatch = useDispatch();
   
   useEffect(() => {
-    const token = localStorage.getItem('admin_token');
+    const token = sessionStorage.getItem('admin_token');
     if (!token) return;
     
     // TODO: Replace with actual SSE endpoint when API is ready
