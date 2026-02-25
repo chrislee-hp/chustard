@@ -1,5 +1,6 @@
 import { useI18n } from '../contexts'
 import type { Category } from '../types/api'
+import { Button } from './ui/button'
 
 interface Props {
   categories: Category[]
@@ -10,23 +11,23 @@ interface Props {
 export function CategoryTabs({ categories, selectedId, onSelect }: Props) {
   const { locale } = useI18n()
   return (
-    <div style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '8px 0' }}>
+    <div className="flex gap-2 overflow-x-auto pb-2 px-1 scrollbar-hide">
       {categories.map(cat => (
-        <button
+        <Button
           key={cat.id}
           onClick={() => onSelect(cat.id)}
-          style={{
-            padding: '8px 16px',
-            border: 'none',
-            borderRadius: 20,
-            background: selectedId === cat.id ? '#1976d2' : '#eee',
-            color: selectedId === cat.id ? '#fff' : '#333',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
+          variant={selectedId === cat.id ? "default" : "outline"}
+          size="lg"
+          className={`
+            whitespace-nowrap rounded-full font-semibold min-w-[100px] transition-all
+            ${selectedId === cat.id 
+              ? 'gradient-food shadow-lg scale-105' 
+              : 'bg-white border-2 border-orange-200 text-gray-700 hover:border-orange-400 hover:bg-orange-50'
+            }
+          `}
         >
           {locale === 'ko' ? cat.nameKo : cat.nameEn}
-        </button>
+        </Button>
       ))}
     </div>
   )

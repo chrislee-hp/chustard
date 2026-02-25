@@ -1,5 +1,8 @@
 import { useI18n } from '../contexts'
 import type { Menu } from '../types/api'
+import { Card, CardContent, CardFooter } from './ui/card'
+import { Button } from './ui/button'
+import { Plus } from 'lucide-react'
 
 interface Props {
   menu: Menu
@@ -12,12 +15,24 @@ export function MenuCard({ menu, onAdd }: Props) {
   const desc = locale === 'ko' ? menu.descKo : menu.descEn
 
   return (
-    <div style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-      {menu.imageUrl && <img src={menu.imageUrl} alt={name} style={{ width: '100%', height: 120, objectFit: 'cover', borderRadius: 4 }} />}
-      <div style={{ fontWeight: 600 }}>{name}</div>
-      <div style={{ fontSize: 12, color: '#666' }}>{desc}</div>
-      <div style={{ fontWeight: 600 }}>₩{menu.price.toLocaleString()}</div>
-      <button onClick={() => onAdd(menu)} style={{ padding: '8px 12px', background: '#1976d2', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}>+</button>
-    </div>
+    <Card className="overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 gradient-card border-0 food-shadow">
+      {menu.imageUrl && (
+        <div className="relative overflow-hidden group">
+          <img src={menu.imageUrl} alt={name} className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-110" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        </div>
+      )}
+      <CardContent className="p-4 space-y-2">
+        <h3 className="font-bold text-lg text-gray-800">{name}</h3>
+        <p className="text-sm text-gray-600 line-clamp-2">{desc}</p>
+        <p className="font-bold text-2xl text-orange-600">₩{menu.price.toLocaleString()}</p>
+      </CardContent>
+      <CardFooter className="p-4 pt-0">
+        <Button onClick={() => onAdd(menu)} size="lg" className="w-full gradient-food hover:opacity-90 transition-opacity shadow-lg text-base font-semibold">
+          <Plus className="w-5 h-5 mr-1" />
+          담기
+        </Button>
+      </CardFooter>
+    </Card>
   )
 }

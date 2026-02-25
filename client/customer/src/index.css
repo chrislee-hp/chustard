@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 4%;
+    --primary: 24 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 39 100% 50%;
+    --secondary-foreground: 20 14% 4%;
+    --muted: 39 20% 96%;
+    --muted-foreground: 20 10% 40%;
+    --accent: 12 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 39 20% 90%;
+    --input: 39 20% 90%;
+    --ring: 24 100% 50%;
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 text-foreground min-h-screen;
+  }
+}
+
+@layer utilities {
+  .gradient-food {
+    @apply bg-gradient-to-r from-orange-500 via-red-500 to-pink-500;
+  }
+  
+  .gradient-card {
+    @apply bg-gradient-to-br from-white via-orange-50/30 to-amber-50/30;
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/90 border border-orange-200/50 shadow-xl;
+  }
+  
+  .food-shadow {
+    box-shadow: 0 4px 20px rgba(251, 146, 60, 0.3);
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
