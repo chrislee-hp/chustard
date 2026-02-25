@@ -3,16 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { fetchMenusAndCategories, deleteMenu } from '../store/slices/menuManagementSlice';
 import type { RootState, AppDispatch } from '../store/store';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
+import { Plus, Edit, Trash2, ChefHat } from 'lucide-react';
 
 export function MenuManagementTab() {
   return (
-    <div style={{ padding: '2rem' }}>
-      <Routes>
-        <Route index element={<MenuListView />} />
-        <Route path="create" element={<MenuFormPage mode="create" />} />
-        <Route path=":id/edit" element={<MenuFormPage mode="edit" />} />
-      </Routes>
-    </div>
+    <Routes>
+      <Route index element={<MenuListView />} />
+      <Route path="create" element={<MenuFormPage mode="create" />} />
+      <Route path=":id/edit" element={<MenuFormPage mode="edit" />} />
+    </Routes>
   );
 }
 
@@ -32,45 +36,79 @@ function MenuListView() {
   };
   
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <h1>메뉴 관리</h1>
-        <button onClick={() => navigate('/admin/menus/create')} style={{ padding: '0.5rem 1rem' }}>
-          메뉴 추가
-        </button>
-      </div>
-      
-      {menus.length === 0 ? (
-        <p>등록된 메뉴가 없습니다.</p>
-      ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #ddd' }}>
-              <th style={{ padding: '0.5rem', textAlign: 'left' }}>메뉴명 (한)</th>
-              <th style={{ padding: '0.5rem', textAlign: 'left' }}>메뉴명 (영)</th>
-              <th style={{ padding: '0.5rem', textAlign: 'right' }}>가격</th>
-              <th style={{ padding: '0.5rem', textAlign: 'center' }}>작업</th>
-            </tr>
-          </thead>
-          <tbody>
-            {menus.map(menu => (
-              <tr key={menu.id} style={{ borderBottom: '1px solid #eee' }}>
-                <td style={{ padding: '0.5rem' }}>{menu.nameKo}</td>
-                <td style={{ padding: '0.5rem' }}>{menu.nameEn}</td>
-                <td style={{ padding: '0.5rem', textAlign: 'right' }}>₩{menu.price.toLocaleString()}</td>
-                <td style={{ padding: '0.5rem', textAlign: 'center' }}>
-                  <button onClick={() => navigate(`/admin/menus/${menu.id}/edit`)} style={{ marginRight: '0.5rem' }}>
-                    수정
-                  </button>
-                  <button onClick={() => handleDelete(menu.id)} style={{ backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '0.25rem 0.5rem', borderRadius: '4px' }}>
-                    삭제
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div className="space-y-6">
+      <Card className="glass-effect border-0 shadow-xl">
+        <CardHeader className="border-b border-slate-200/50 bg-gradient-to-r from-slate-50 to-gray-50">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl gradient-admin flex items-center justify-center">
+                <ChefHat className="w-6 h-6 text-white" />
+              </div>
+              <CardTitle className="text-2xl font-bold text-slate-800">메뉴 관리</CardTitle>
+            </div>
+            <Button 
+              onClick={() => navigate('/admin/menus/create')}
+              size="lg"
+              className="gradient-admin hover:opacity-90 transition-opacity shadow-lg font-semibold"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              메뉴 추가
+            </Button>
+          </div>
+        </CardHeader>
+        
+        <CardContent className="p-6">
+          {menus.length === 0 ? (
+            <div className="text-center py-16">
+              <ChefHat className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+              <p className="text-gray-500 text-lg">등록된 메뉴가 없습니다</p>
+              <p className="text-gray-400 text-sm mt-2">메뉴 추가 버튼을 눌러 첫 메뉴를 등록하세요</p>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-50">
+                  <TableHead className="font-bold">메뉴명 (한)</TableHead>
+                  <TableHead className="font-bold">메뉴명 (영)</TableHead>
+                  <TableHead className="text-right font-bold">가격</TableHead>
+                  <TableHead className="text-center font-bold w-32">작업</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {menus.map(menu => (
+                  <TableRow key={menu.id} className="hover:bg-slate-50 transition-colors">
+                    <TableCell className="font-medium">{menu.nameKo}</TableCell>
+                    <TableCell className="text-gray-600">{menu.nameEn}</TableCell>
+                    <TableCell className="text-right font-semibold text-slate-700">₩{menu.price.toLocaleString()}</TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex gap-2 justify-center">
+                        <Button 
+                          onClick={() => navigate(`/admin/menus/${menu.id}/edit`)}
+                          variant="outline"
+                          size="sm"
+                          className="border-slate-300 hover:bg-slate-100"
+                        >
+                          <Edit className="w-4 h-4 mr-1" />
+                          수정
+                        </Button>
+                        <Button 
+                          onClick={() => handleDelete(menu.id)}
+                          variant="outline"
+                          size="sm"
+                          className="border-red-300 text-red-600 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-4 h-4 mr-1" />
+                          삭제
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -101,7 +139,6 @@ function MenuFormPage({ mode }: { mode: 'create' | 'edit' }) {
       return;
     }
     
-    // dispatch(createMenu(formData));
     alert('메뉴가 저장되었습니다');
     navigate('/admin/menus');
   };
@@ -115,80 +152,127 @@ function MenuFormPage({ mode }: { mode: 'create' | 'edit' }) {
   };
   
   return (
-    <div>
-      <h1>{mode === 'create' ? '메뉴 추가' : '메뉴 수정'}</h1>
-      
-      <form onSubmit={handleSubmit} style={{ maxWidth: '600px', marginTop: '2rem' }}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>메뉴명 (한글) *</label>
-          <input
-            name="nameKo"
-            value={formData.nameKo}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '0.5rem' }}
-          />
-        </div>
+    <div className="max-w-3xl mx-auto">
+      <Card className="glass-effect border-0 shadow-xl">
+        <CardHeader className="border-b border-slate-200/50 bg-gradient-to-r from-slate-50 to-gray-50">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl gradient-admin flex items-center justify-center">
+              <ChefHat className="w-6 h-6 text-white" />
+            </div>
+            <CardTitle className="text-2xl font-bold text-slate-800">
+              {mode === 'create' ? '메뉴 추가' : '메뉴 수정'}
+            </CardTitle>
+          </div>
+        </CardHeader>
         
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>메뉴명 (영문) *</label>
-          <input
-            name="nameEn"
-            value={formData.nameEn}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '0.5rem' }}
-          />
-        </div>
-        
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>설명 (한글)</label>
-          <textarea
-            name="descriptionKo"
-            value={formData.descriptionKo}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '0.5rem', minHeight: '80px' }}
-          />
-        </div>
-        
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>설명 (영문)</label>
-          <textarea
-            name="descriptionEn"
-            value={formData.descriptionEn}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '0.5rem', minHeight: '80px' }}
-          />
-        </div>
-        
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>가격 *</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '0.5rem' }}
-          />
-        </div>
-        
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>이미지 URL</label>
-          <input
-            name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            style={{ width: '100%', padding: '0.5rem' }}
-          />
-        </div>
-        
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button type="submit" style={{ flex: 1, padding: '0.75rem', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px' }}>
-            저장
-          </button>
-          <button type="button" onClick={() => navigate('/admin/menus')} style={{ flex: 1, padding: '0.75rem' }}>
-            취소
-          </button>
-        </div>
-      </form>
+        <CardContent className="p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="nameKo" className="text-sm font-semibold text-slate-700">
+                  메뉴명 (한글) <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="nameKo"
+                  name="nameKo"
+                  value={formData.nameKo}
+                  onChange={handleChange}
+                  className="h-12 border-slate-300"
+                  placeholder="예: 김치찌개"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="nameEn" className="text-sm font-semibold text-slate-700">
+                  메뉴명 (영문) <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="nameEn"
+                  name="nameEn"
+                  value={formData.nameEn}
+                  onChange={handleChange}
+                  className="h-12 border-slate-300"
+                  placeholder="e.g. Kimchi Stew"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="descriptionKo" className="text-sm font-semibold text-slate-700">설명 (한글)</Label>
+                <textarea
+                  id="descriptionKo"
+                  name="descriptionKo"
+                  value={formData.descriptionKo}
+                  onChange={handleChange}
+                  className="w-full h-24 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
+                  placeholder="메뉴 설명을 입력하세요"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="descriptionEn" className="text-sm font-semibold text-slate-700">설명 (영문)</Label>
+                <textarea
+                  id="descriptionEn"
+                  name="descriptionEn"
+                  value={formData.descriptionEn}
+                  onChange={handleChange}
+                  className="w-full h-24 px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-400"
+                  placeholder="Enter menu description"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="price" className="text-sm font-semibold text-slate-700">
+                  가격 <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="price"
+                  type="number"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  className="h-12 border-slate-300"
+                  placeholder="0"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="imageUrl" className="text-sm font-semibold text-slate-700">이미지 URL</Label>
+                <Input
+                  id="imageUrl"
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleChange}
+                  className="h-12 border-slate-300"
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3 pt-6">
+              <Button 
+                type="submit"
+                size="lg"
+                className="flex-1 gradient-admin hover:opacity-90 transition-opacity shadow-lg font-semibold h-14"
+              >
+                저장
+              </Button>
+              <Button 
+                type="button"
+                onClick={() => navigate('/admin/menus')}
+                variant="outline"
+                size="lg"
+                className="flex-1 border-2 border-slate-300 hover:bg-slate-100 font-semibold h-14"
+              >
+                취소
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
