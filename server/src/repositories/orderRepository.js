@@ -1,42 +1,63 @@
+import { saveDb } from '../db/database.js';
+
 export class OrderRepository {
   constructor(db) {
     this.db = db;
   }
 
   create({ sessionId, tableId, totalAmount }) {
-    const stmt = this.db.prepare(`
+    this.db.run(`
       INSERT INTO orders (session_id, table_id, total_amount, status)
       VALUES (?, ?, ?, 'pending')
-    `);
-    const result = stmt.run(sessionId, tableId, totalAmount);
-    return this.findById(result.lastInsertRowid);
+    `, [sessionId, tableId, totalAmount]);
+    
+    // saveDb 전에 lastId 가져오기 (saveDb 후에는 0 반환됨)
+    const result = this.db.exec('SELECT last_insert_rowid() as id');
+    const lastId = result[0]?.values[0]?.[0];
+    saveDb();
+    
+    return this.findById(lastId);
   }
 
   findById(id) {
     const stmt = this.db.prepare('SELECT * FROM orders WHERE id = ?');
-    const row = stmt.get(id);
-    return row ? this.#mapRow(row) : null;
+    stmt.bind([id]);
+    if (stmt.step()) {
+      const row = stmt.getAsObject();
+      stmt.free();
+      return this.#mapRow(row);
+    }
+    stmt.free();
+    return null;
   }
 
   findBySessionId(sessionId) {
     const stmt = this.db.prepare('SELECT * FROM orders WHERE session_id = ? AND deleted_at IS NULL ORDER BY created_at');
-    return stmt.all(sessionId).map(row => this.#mapRow(row));
+    stmt.bind([sessionId]);
+    const rows = [];
+    while (stmt.step()) rows.push(stmt.getAsObject());
+    stmt.free();
+    return rows.map(row => this.#mapRow(row));
   }
 
   findByTableId(tableId) {
     const stmt = this.db.prepare('SELECT * FROM orders WHERE table_id = ? AND deleted_at IS NULL ORDER BY created_at');
-    return stmt.all(tableId).map(row => this.#mapRow(row));
+    stmt.bind([tableId]);
+    const rows = [];
+    while (stmt.step()) rows.push(stmt.getAsObject());
+    stmt.free();
+    return rows.map(row => this.#mapRow(row));
   }
 
   updateStatus(id, status) {
-    const stmt = this.db.prepare('UPDATE orders SET status = ?, updated_at = datetime("now") WHERE id = ?');
-    stmt.run(status, id);
+    this.db.run('UPDATE orders SET status = ?, updated_at = datetime("now") WHERE id = ?', [status, id]);
+    saveDb();
     return this.findById(id);
   }
 
   softDelete(id) {
-    const stmt = this.db.prepare('UPDATE orders SET deleted_at = datetime("now") WHERE id = ?');
-    stmt.run(id);
+    this.db.run('UPDATE orders SET deleted_at = datetime("now") WHERE id = ?', [id]);
+    saveDb();
   }
 
   #mapRow(row) {

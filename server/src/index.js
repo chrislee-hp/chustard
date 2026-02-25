@@ -23,6 +23,8 @@ import { createOrderRoutes } from './routes/orderRoutes.js';
 import { createTableRoutes } from './routes/tableRoutes.js';
 import { createSSERoutes } from './routes/sseRoutes.js';
 
+import bcrypt from 'bcrypt';
+
 const JWT_SECRET = process.env.JWT_SECRET || 
   (process.env.NODE_ENV !== 'production' ? 'dev-secret-key' : null);
 
@@ -32,42 +34,53 @@ if (!JWT_SECRET) {
 
 const PORT = process.env.PORT || 3000;
 
-// Initialize DB
-initDb();
-seedDb();
-const db = getDb();
+async function main() {
+  // Initialize DB
+  await initDb();
+  await seedDb();
+  const db = await getDb();
+  
+  // Admin 계정 생성
+  const passwordHash = await bcrypt.hash('admin1234', 10);
+  try {
+    db.run(`INSERT OR IGNORE INTO admins (id, store_id, username, password_hash) VALUES (?, ?, ?, ?)`,
+      ['admin-001', 'store-001', 'admin', passwordHash]);
+  } catch (e) { /* ignore if exists */ }
 
-// Repositories
-const adminRepo = new AdminRepository(db);
-const tableRepo = new TableRepository(db);
-const sessionRepo = new TableSessionRepository(db);
-const categoryRepo = new CategoryRepository(db);
-const menuRepo = new MenuRepository(db);
-const orderRepo = new OrderRepository(db);
-const orderItemRepo = new OrderItemRepository(db);
-const loginAttemptRepo = new LoginAttemptRepository(db);
+  // Repositories
+  const adminRepo = new AdminRepository(db);
+  const tableRepo = new TableRepository(db);
+  const sessionRepo = new TableSessionRepository(db);
+  const categoryRepo = new CategoryRepository(db);
+  const menuRepo = new MenuRepository(db);
+  const orderRepo = new OrderRepository(db);
+  const orderItemRepo = new OrderItemRepository(db);
+  const loginAttemptRepo = new LoginAttemptRepository(db);
 
-// Services
-const sseService = new SSEService();
-const authService = new AuthService(adminRepo, tableRepo, sessionRepo, loginAttemptRepo, JWT_SECRET);
-const menuService = new MenuService(categoryRepo, menuRepo);
-const orderService = new OrderService(orderRepo, orderItemRepo, menuRepo, tableRepo, sseService);
-const tableService = new TableService(tableRepo, sessionRepo, sseService);
+  // Services
+  const sseService = new SSEService();
+  const authService = new AuthService(adminRepo, tableRepo, sessionRepo, loginAttemptRepo, JWT_SECRET);
+  const menuService = new MenuService(categoryRepo, menuRepo);
+  const orderService = new OrderService(orderRepo, orderItemRepo, menuRepo, tableRepo, sseService);
+  const tableService = new TableService(tableRepo, sessionRepo, sseService);
 
-// Middleware
-const auth = authMiddleware(JWT_SECRET);
+  // Middleware
+  const auth = authMiddleware(JWT_SECRET);
 
-// Routes
-const routes = {
-  auth: createAuthRoutes(authService),
-  menu: createMenuRoutes(menuService, auth),
-  order: createOrderRoutes(orderService, auth),
-  table: createTableRoutes(tableService, auth),
-  sse: createSSERoutes(sseService, auth)
-};
+  // Routes
+  const routes = {
+    auth: createAuthRoutes(authService),
+    menu: createMenuRoutes(menuService, auth),
+    order: createOrderRoutes(orderService, auth),
+    table: createTableRoutes(tableService, auth),
+    sse: createSSERoutes(sseService, auth)
+  };
 
-const app = createApp(routes);
+  const app = createApp(routes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+main().catch(console.error);

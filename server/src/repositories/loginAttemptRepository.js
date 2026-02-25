@@ -1,10 +1,12 @@
+import { createStatement, saveDb } from '../db/database.js';
+
 export class LoginAttemptRepository {
   constructor(db) {
     this.db = db;
   }
 
   create({ id, adminId, success }) {
-    const stmt = this.db.prepare(`
+    const stmt = createStatement(this.db, `
       INSERT INTO login_attempts (id, admin_id, success)
       VALUES (?, ?, ?)
     `);
@@ -13,18 +15,18 @@ export class LoginAttemptRepository {
   }
 
   findById(id) {
-    const stmt = this.db.prepare('SELECT * FROM login_attempts WHERE id = ?');
+    const stmt = createStatement(this.db, 'SELECT * FROM login_attempts WHERE id = ?');
     const row = stmt.get(id);
     return row ? this.#mapRow(row) : null;
   }
 
   countRecentFailures(adminId, minutes) {
-    const stmt = this.db.prepare(`
+    const stmt = createStatement(this.db, `
       SELECT COUNT(*) as count FROM login_attempts 
       WHERE admin_id = ? AND success = 0 
       AND attempted_at > datetime('now', '-' || ? || ' minutes')
     `);
-    return stmt.get(adminId, minutes).count;
+    return stmt.get(adminId, minutes)?.count || 0;
   }
 
   #mapRow(row) {

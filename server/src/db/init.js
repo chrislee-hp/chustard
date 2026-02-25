@@ -3,15 +3,18 @@ import bcrypt from 'bcrypt';
 
 (async () => {
   console.log('Initializing database...');
-  initDb();
+  await initDb();
   console.log('Seeding database...');
-  seedDb();
+  await seedDb();
   
   // Admin 계정 생성 (bcrypt 해시)
-  const db = getDb();
+  const db = await getDb();
   const passwordHash = await bcrypt.hash('admin1234', 10);
-  db.prepare(`INSERT OR IGNORE INTO admins (id, store_id, username, password_hash) VALUES (?, ?, ?, ?)`)
-    .run('admin-001', 'store-001', 'admin', passwordHash);
+  db.run(`INSERT OR IGNORE INTO admins (id, store_id, username, password_hash) VALUES (?, ?, ?, ?)`,
+    ['admin-001', 'store-001', 'admin', passwordHash]);
+  
+  const { saveDb } = await import('./database.js');
+  saveDb();
   
   console.log('Database initialized successfully.');
 })();
