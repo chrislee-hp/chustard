@@ -2,6 +2,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth, useI18n, useToast } from '../contexts'
 import { useApi } from '../hooks'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
 
 export function LoginSetupPage() {
   const [storeId, setStoreId] = useState('')
@@ -39,25 +43,31 @@ export function LoginSetupPage() {
   }
 
   return (
-    <div style={{ maxWidth: 320, margin: '40px auto', padding: 16 }}>
-      <h1 style={{ textAlign: 'center', marginBottom: 24 }}>{t('login')}</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <label>
-          {t('storeId')}
-          <input type="text" value={storeId} onChange={e => setStoreId(e.target.value)} style={{ width: '100%', padding: 8, marginTop: 4 }} />
-        </label>
-        <label>
-          {t('tableNumber')}
-          <input type="number" value={tableNumber} onChange={e => setTableNumber(e.target.value)} style={{ width: '100%', padding: 8, marginTop: 4 }} />
-        </label>
-        <label>
-          {t('password')}
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} style={{ width: '100%', padding: 8, marginTop: 4 }} />
-        </label>
-        <button type="submit" disabled={!isValid || isLoading} style={{ padding: 12, background: '#1976d2', color: '#fff', border: 'none', borderRadius: 4, cursor: isValid ? 'pointer' : 'not-allowed' }}>
-          {isLoading ? '...' : t('login')}
-        </button>
-      </form>
+    <div className="max-w-sm mx-auto mt-10 p-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-center">{t('login')}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="storeId">{t('storeId')}</Label>
+              <Input id="storeId" type="text" value={storeId} onChange={e => setStoreId(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="tableNumber">{t('tableNumber')}</Label>
+              <Input id="tableNumber" type="number" value={tableNumber} onChange={e => setTableNumber(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">{t('password')}</Label>
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+            </div>
+            <Button type="submit" disabled={!isValid || isLoading} className="w-full">
+              {isLoading ? '...' : t('login')}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }

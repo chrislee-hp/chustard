@@ -45,12 +45,12 @@ export function MenuPage() {
     })
   }
 
-  if (isLoading) return <div style={{ textAlign: 'center', padding: 40 }}>Loading...</div>
+  if (isLoading) return <div className="text-center py-10">Loading...</div>
 
   return (
-    <div style={{ padding: 16 }}>
+    <div className="p-4 space-y-4">
       <CategoryTabs categories={categories} selectedId={selectedCategoryId} onSelect={setSelectedCategoryId} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 16, marginTop: 16 }}>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredMenus.map(menu => (
           <MenuCard key={menu.id} menu={menu} onAdd={handleAddToCart} />
         ))}

@@ -5,6 +5,10 @@ import { loginSuccess, loginFailure } from '../store/slices/authSlice';
 import { validateLoginForm } from '../utils/validation';
 import api from '../utils/api';
 import type { LoginCredentials } from '../types';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
 
 export function LoginPage() {
   const [formData, setFormData] = useState<LoginCredentials>({
@@ -47,25 +51,31 @@ export function LoginPage() {
   };
   
   return (
-    <div className="login-page">
-      <h1>관리자 로그인</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>매장 식별자</label>
-          <input name="storeId" value={formData.storeId} onChange={handleChange} placeholder="store-123" />
-        </div>
-        <div>
-          <label>사용자명</label>
-          <input name="username" value={formData.username} onChange={handleChange} placeholder="admin" />
-        </div>
-        <div>
-          <label>비밀번호</label>
-          <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" />
-        </div>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? '로그인 중...' : '로그인'}
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-muted/50 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl text-center">관리자 로그인</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="storeId">매장 식별자</Label>
+              <Input id="storeId" name="storeId" value={formData.storeId} onChange={handleChange} placeholder="store-123" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="username">사용자명</Label>
+              <Input id="username" name="username" value={formData.username} onChange={handleChange} placeholder="admin" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">비밀번호</Label>
+              <Input id="password" type="password" name="password" value={formData.password} onChange={handleChange} placeholder="********" />
+            </div>
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? '로그인 중...' : '로그인'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

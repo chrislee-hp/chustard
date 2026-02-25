@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useCart, useI18n, useToast } from '../contexts'
 import { useApi } from '../hooks'
 import { CartItem } from '../components'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
+import { Button } from '../components/ui/button'
 
 export function OrderConfirmPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -29,31 +31,39 @@ export function OrderConfirmPage() {
   }
 
   return (
-    <div style={{ padding: 16, maxWidth: 400, margin: '0 auto' }}>
-      <h2>{t('orderConfirm')}</h2>
-      <div style={{ marginTop: 16 }}>
-        {items.map(item => (
-          <CartItem
-            key={item.menuId}
-            item={item}
-            onIncrease={() => updateQuantity(item.menuId, item.quantity + 1)}
-            onDecrease={() => updateQuantity(item.menuId, item.quantity - 1)}
-          />
-        ))}
-      </div>
-      <div style={{ marginTop: 16, fontWeight: 600, fontSize: 18 }}>
-        Total: ₩{totalAmount.toLocaleString()}
-      </div>
-      <button
-        onClick={handleSubmit}
-        disabled={items.length === 0 || isSubmitting}
-        style={{ width: '100%', marginTop: 16, padding: 12, background: '#1976d2', color: '#fff', border: 'none', borderRadius: 4, cursor: 'pointer' }}
-      >
-        {isSubmitting ? '...' : t('orderConfirm')}
-      </button>
-      <button onClick={() => navigate('/menu')} style={{ width: '100%', marginTop: 8, padding: 12, background: '#eee', border: 'none', borderRadius: 4, cursor: 'pointer' }}>
-        {t('menu')}
-      </button>
+    <div className="p-4 max-w-md mx-auto">
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('orderConfirm')}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            {items.map(item => (
+              <CartItem
+                key={item.menuId}
+                item={item}
+                onIncrease={() => updateQuantity(item.menuId, item.quantity + 1)}
+                onDecrease={() => updateQuantity(item.menuId, item.quantity - 1)}
+              />
+            ))}
+          </div>
+          <div className="font-semibold text-lg pt-4 border-t">
+            Total: ₩{totalAmount.toLocaleString()}
+          </div>
+          <div className="space-y-2">
+            <Button
+              onClick={handleSubmit}
+              disabled={items.length === 0 || isSubmitting}
+              className="w-full"
+            >
+              {isSubmitting ? '...' : t('orderConfirm')}
+            </Button>
+            <Button onClick={() => navigate('/menu')} variant="outline" className="w-full">
+              {t('menu')}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

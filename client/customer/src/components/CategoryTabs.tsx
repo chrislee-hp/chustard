@@ -1,5 +1,6 @@
 import { useI18n } from '../contexts'
 import type { Category } from '../types/api'
+import { Tabs, TabsList, TabsTrigger } from './ui/tabs'
 
 interface Props {
   categories: Category[]
@@ -10,24 +11,14 @@ interface Props {
 export function CategoryTabs({ categories, selectedId, onSelect }: Props) {
   const { locale } = useI18n()
   return (
-    <div style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '8px 0' }}>
-      {categories.map(cat => (
-        <button
-          key={cat.id}
-          onClick={() => onSelect(cat.id)}
-          style={{
-            padding: '8px 16px',
-            border: 'none',
-            borderRadius: 20,
-            background: selectedId === cat.id ? '#1976d2' : '#eee',
-            color: selectedId === cat.id ? '#fff' : '#333',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {locale === 'ko' ? cat.nameKo : cat.nameEn}
-        </button>
-      ))}
-    </div>
+    <Tabs value={selectedId || undefined} onValueChange={onSelect} className="w-full">
+      <TabsList className="w-full justify-start overflow-x-auto">
+        {categories.map(cat => (
+          <TabsTrigger key={cat.id} value={cat.id}>
+            {locale === 'ko' ? cat.nameKo : cat.nameEn}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
   )
 }
