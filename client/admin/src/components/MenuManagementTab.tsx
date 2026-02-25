@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { fetchMenusAndCategories, deleteMenu } from '../store/slices/menuManagementSlice';
+import { fetchMenusAndCategories, deleteMenu, createMenu, updateMenu } from '../store/slices/menuManagementSlice';
 import type { RootState, AppDispatch } from '../store/store';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -116,6 +116,9 @@ function MenuListView() {
 function MenuFormPage({ mode }: { mode: 'create' | 'edit' }) {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { menus, categories } = useSelector((state: RootState) => state.menuManagement);
+  const menuId = window.location.pathname.split('/')[3];
+  
   const [formData, setFormData] = React.useState({
     nameKo: '',
     nameEn: '',
@@ -125,6 +128,23 @@ function MenuFormPage({ mode }: { mode: 'create' | 'edit' }) {
     categoryId: '',
     imageUrl: ''
   });
+  
+  useEffect(() => {
+    if (mode === 'edit' && menuId) {
+      const menu = menus.find(m => m.id === menuId);
+      if (menu) {
+        setFormData({
+          nameKo: menu.nameKo || '',
+          nameEn: menu.nameEn || '',
+          descriptionKo: menu.descKo || '',
+          descriptionEn: menu.descEn || '',
+          price: menu.price || 0,
+          categoryId: menu.categoryId || '',
+          imageUrl: menu.imageUrl || ''
+        });
+      }
+    }
+  }, [mode, menuId, menus]);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -139,8 +159,27 @@ function MenuFormPage({ mode }: { mode: 'create' | 'edit' }) {
       return;
     }
     
-    alert('메뉴가 저장되었습니다');
-    navigate('/admin/menus');
+    const menuData = {
+      nameKo: formData.nameKo,
+      nameEn: formData.nameEn,
+      descKo: formData.descriptionKo,
+      descEn: formData.descriptionEn,
+      price: formData.price,
+      categoryId: formData.categoryId || (categories[0]?.id || ''),
+      imageUrl: formData.imageUrl
+    };
+    
+    try {
+      if (mode === 'create') {
+        await dispatch(createMenu(menuData)).unwrap();
+      } else {
+        await dispatch(updateMenu({ id: menuId, data: menuData })).unwrap();
+      }
+      alert('메뉴가 저장되었습니다');
+      navigate('/admin/menus');
+    } catch (err) {
+      alert('저장에 실패했습니다');
+    }
   };
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
