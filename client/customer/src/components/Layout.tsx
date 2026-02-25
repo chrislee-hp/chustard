@@ -5,7 +5,7 @@ import { useSSE } from '../hooks'
 import { LanguageToggle, CartItem } from '../components'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
-import { ShoppingCart, X, UtensilsCrossed } from 'lucide-react'
+import { ShoppingCart, X, UtensilsCrossed, History } from 'lucide-react'
 
 export function Header() {
   const { t } = useI18n()
@@ -15,9 +15,17 @@ export function Header() {
         <UtensilsCrossed className="w-7 h-7" />
         맛있는 주문
       </Link>
-      <div className="flex items-center gap-4">
-        <Link to="/orders" className="no-underline text-gray-700 hover:text-orange-600 transition-colors font-medium">
-          {t('orderHistory')}
+      <div className="flex items-center gap-3">
+        <Link to="/menu">
+          <Button variant="ghost" size="sm" className="text-gray-700 hover:text-orange-600 hover:bg-orange-50 font-medium">
+            메뉴
+          </Button>
+        </Link>
+        <Link to="/orders">
+          <Button variant="ghost" size="sm" className="text-gray-700 hover:text-orange-600 hover:bg-orange-50 font-medium flex items-center gap-1">
+            <History className="w-4 h-4" />
+            주문내역
+          </Button>
         </Link>
         <LanguageToggle />
       </div>
