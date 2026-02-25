@@ -74,7 +74,7 @@ function Header() {
               >
                 <ClipboardList className="w-5 h-5 mr-2" />
                 주문 모니터링
-                {isActive && <Badge className="ml-2 bg-white/20">LIVE</Badge>}
+                <Badge className={`ml-2 ${isActive ? 'bg-white/20' : 'bg-green-500 text-white'}`}>LIVE</Badge>
               </Button>
             )}
           </NavLink>

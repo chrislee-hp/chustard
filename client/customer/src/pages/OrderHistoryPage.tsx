@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useAuth, useI18n } from '../contexts'
 import { useApi, useSSE } from '../hooks'
+import { Card, CardContent } from '../components/ui/card'
+import { Badge } from '../components/ui/badge'
+import { Clock, ChefHat, Check, Receipt } from 'lucide-react'
 import type { Order } from '../types/api'
 
 export function OrderHistoryPage() {
@@ -28,34 +31,61 @@ export function OrderHistoryPage() {
     },
   })
 
-  const getStatusLabel = (status: Order['status']) => {
-    return t(`status.${status}`)
-  }
-
-  if (isLoading) return <div style={{ textAlign: 'center', padding: 40 }}>Loading...</div>
+  if (isLoading) return <div className="text-center py-10">Loading...</div>
 
   return (
-    <div style={{ padding: 16 }}>
-      <h2>{t('orderHistory')}</h2>
+    <div className="p-4 space-y-4">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 rounded-xl gradient-food flex items-center justify-center">
+          <Receipt className="w-6 h-6 text-white" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-800">{t('orderHistory')}</h2>
+      </div>
+      
       {orders.length === 0 ? (
-        <p style={{ color: '#666', textAlign: 'center' }}>No orders yet</p>
+        <Card className="glass-effect border-0 p-12 text-center">
+          <Receipt className="w-16 h-16 mx-auto text-gray-300 mb-4" />
+          <p className="text-gray-500">{t('noOrders')}</p>
+        </Card>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
+        <div className="space-y-3">
           {orders.map(order => (
-            <div key={order.id} style={{ border: '1px solid #ddd', borderRadius: 8, padding: 12 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontWeight: 600 }}>#{String(order.id).slice(-6)}</span>
-                <span style={{ padding: '2px 8px', borderRadius: 12, background: order.status === 'completed' ? '#4caf50' : '#ff9800', color: '#fff', fontSize: 12 }}>
-                  {getStatusLabel(order.status)}
-                </span>
-              </div>
-              <div style={{ marginTop: 8, fontSize: 14, color: '#666' }}>
-                {order.items.map(item => (
-                  <div key={item.menuId}>{locale === 'ko' ? item.nameKo : item.nameEn} x{item.quantity}</div>
-                ))}
-              </div>
-              <div style={{ marginTop: 8, fontWeight: 600 }}>₩{order.totalAmount.toLocaleString()}</div>
-            </div>
+            <Card key={order.id} className={`
+              gradient-card border-0 shadow-lg overflow-hidden border-l-4
+              ${order.status === 'pending' ? 'border-l-yellow-500' : ''}
+              ${order.status === 'preparing' ? 'border-l-blue-500' : ''}
+              ${order.status === 'completed' ? 'border-l-green-500' : ''}
+            `}>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="font-bold text-lg text-gray-800">#{String(order.id).slice(-6)}</span>
+                  <Badge className={`
+                    ${order.status === 'pending' ? 'bg-yellow-500' : ''}
+                    ${order.status === 'preparing' ? 'bg-blue-500' : ''}
+                    ${order.status === 'completed' ? 'bg-green-500' : ''}
+                    text-white
+                  `}>
+                    {order.status === 'pending' && <><Clock className="w-3 h-3 mr-1" />{t('status.pending')}</>}
+                    {order.status === 'preparing' && <><ChefHat className="w-3 h-3 mr-1" />{t('status.preparing')}</>}
+                    {order.status === 'completed' && <><Check className="w-3 h-3 mr-1" />{t('status.completed')}</>}
+                  </Badge>
+                </div>
+                
+                <div className="space-y-1 mb-3">
+                  {order.items.map(item => (
+                    <div key={item.menuId} className="flex justify-between text-sm">
+                      <span className="text-gray-600">{locale === 'ko' ? item.nameKo : item.nameEn} × {item.quantity}</span>
+                      <span className="text-gray-800">₩{(item.price * item.quantity).toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
+                  <span className="text-gray-600">{t('totalAmount')}</span>
+                  <span className="font-bold text-xl text-orange-600">₩{order.totalAmount.toLocaleString()}</span>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       )}
